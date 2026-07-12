@@ -53,6 +53,8 @@ class CarbonInput(BaseModel):
 
 class GreenwashingInput(BaseModel):
     text: str
+    topic: Optional[str] = ""
+    cost: Optional[float] = 0.0
     user_id: int
 
 class ESGScoreInput(BaseModel):
@@ -85,6 +87,9 @@ class RenewableInput(BaseModel):
     direct_sun_hours: float
     turbine_capacity_kw: Optional[float] = 0.0
     wind_speed_ms: Optional[float] = 0.0
+    flow_rate_m3s: Optional[float] = 0.0
+    head_height_m: Optional[float] = 0.0
+    waste_feedstock_kg: Optional[float] = 0.0
     user_id: int
 
 # REST APIs
@@ -154,7 +159,7 @@ def carbon_history(user_id: int, db: Session = Depends(get_db)):
 
 @app.post("/detect-greenwashing")
 def detect_greenwashing(data: GreenwashingInput, db: Session = Depends(get_db)):
-    result = GreenwashingDetectorAI.analyze(data.text)
+    result = GreenwashingDetectorAI.analyze(data.text, data.topic, data.cost)
     
     new_history = DBAnalysisHistory(
         user_id=data.user_id,
@@ -239,12 +244,21 @@ def renewable_predict(data: RenewableInput, db: Session = Depends(get_db)):
         data.turbine_capacity_kw,
         data.wind_speed_ms
     )
+    water = RenewableEnergyAI.predict_water(
+        data.flow_rate_m3s,
+        data.head_height_m
+    )
+    biogas = RenewableEnergyAI.predict_biogas(
+        data.waste_feedstock_kg
+    )
     
     result = {
         "solar": solar,
         "wind": wind,
-        "combined_annual_generation_kwh": solar["annual_generation_kwh"] + wind["annual_generation_kwh"],
-        "combined_annual_carbon_offset_kg": solar["annual_carbon_offset_kg"] + wind["annual_carbon_offset_kg"]
+        "water": water,
+        "biogas": biogas,
+        "combined_annual_generation_kwh": solar["annual_generation_kwh"] + wind["annual_generation_kwh"] + water["annual_generation_kwh"] + biogas["annual_generation_kwh"],
+        "combined_annual_carbon_offset_kg": solar["annual_carbon_offset_kg"] + wind["annual_carbon_offset_kg"] + water["annual_carbon_offset_kg"] + biogas["annual_carbon_offset_kg"]
     }
     
     new_history = DBAnalysisHistory(

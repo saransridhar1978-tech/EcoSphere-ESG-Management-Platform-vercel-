@@ -1,17 +1,17 @@
 "use client";
 import React, { useState } from 'react';
 import { useApp } from '../AppContext';
-import { Sparkles, Trophy, CheckSquare, Zap, RefreshCw, Award, MapPin } from 'lucide-react';
+import { Sparkles, Trophy, CheckSquare, Zap, RefreshCw, Award, MapPin, Target } from 'lucide-react';
 
 export default function EcoGiniPage() {
   const { user } = useApp();
-  const [energy, setEnergy] = useState(4800);
+  
+  // Simplified options: less sliders with approximate energy values
+  const [energy, setEnergy] = useState(4800); // Approximate energy level
   const [recycle, setRecycle] = useState(65);
   const [renewable, setRenewable] = useState(30);
-  const [carbon, setCarbon] = useState(24.5);
-  const [social, setSocial] = useState(85);
-  const [gov, setGov] = useState(80);
-  const [location, setLocation] = useState('Tamil Nadu, India'); // Default to Tamil Nadu, India
+  
+  const [location, setLocation] = useState('Tamil Nadu, India');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>({
     overall_esg_score: 84.5,
@@ -34,9 +34,9 @@ export default function EcoGiniPage() {
           energy_usage: energy,
           waste_recycle_rate: recycle,
           renewable_pct: renewable,
-          carbon_emission: carbon,
-          social_score: social,
-          gov_score: gov,
+          carbon_emission: 24.5, // preset approximate standard carbon
+          social_score: 85,      // preset
+          gov_score: 80,         // preset
           user_id: user?.id || 1
         })
       });
@@ -47,8 +47,8 @@ export default function EcoGiniPage() {
       }
     } catch (err) {
       console.error("Connection failed. Using mock algorithms.");
-      const e_score = Math.max(10.0, Math.min(100.0, 60.0 + (recycle - 50.0) * 0.3 + renewable * 0.4 - carbon * 0.2));
-      const overall = (e_score * 0.5) + (social * 0.25) + (gov * 0.25);
+      const e_score = Math.max(10.0, Math.min(100.0, 60.0 + (recycle - 50.0) * 0.3 + renewable * 0.4 - 24.5 * 0.2));
+      const overall = (e_score * 0.5) + (85 * 0.25) + (80 * 0.25);
       let level = "Bronze";
       if (overall >= 85) level = "Platinum";
       else if (overall >= 70) level = "Gold";
@@ -91,14 +91,15 @@ export default function EcoGiniPage() {
         <h1 className="text-2xl font-extrabold text-white flex items-center gap-2">
           <Sparkles className="h-6 w-6 text-emerald-400" /> Eco-Gini AI Sustainability Score
         </h1>
-        <p className="text-xs text-gray-400 mt-1">Simulate corporate metrics to generate an audited ESG rating and structured improvement roadmap.</p>
+        <p className="text-xs text-gray-400 mt-1">Simulate Tamil Nadu grid parameters to generate audited ESG ratings with fewer, simpler metrics.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs">
-        {/* Sliders Input Form */}
-        <div className="glass-card lg:col-span-1 h-fit space-y-4">
-          <h3 className="text-sm font-bold text-white mb-4">Organization Metrics</h3>
-          <form onSubmit={handleScore} className="space-y-4">
+        {/* Simplified Input Form */}
+        <div className="glass-card lg:col-span-1 h-fit space-y-5">
+          <h3 className="text-sm font-bold text-white mb-4">Approximate Facility Metrics</h3>
+          
+          <form onSubmit={handleScore} className="space-y-5">
             <div>
               <label className="block text-gray-400 font-semibold mb-1.5 flex items-center gap-1">
                 <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Audit Location
@@ -114,13 +115,14 @@ export default function EcoGiniPage() {
 
             <div>
               <div className="flex justify-between text-gray-400 font-semibold mb-1">
-                <span>Energy Usage</span>
+                <span>Approximate Energy Level</span>
                 <span className="text-emerald-400 font-bold">{energy} kWh</span>
               </div>
               <input
                 type="range"
                 min="1000"
                 max="10000"
+                step="500"
                 value={energy}
                 onChange={(e) => setEnergy(parseInt(e.target.value))}
                 className="eco-slider"
@@ -157,50 +159,16 @@ export default function EcoGiniPage() {
               />
             </div>
 
-            <div>
-              <div className="flex justify-between text-gray-400 font-semibold mb-1">
-                <span>Carbon Emission Intensity</span>
-                <span className="text-emerald-400 font-bold">{carbon} tCO2e</span>
-              </div>
-              <input
-                type="range"
-                min="5"
-                max="100"
-                step="0.5"
-                value={carbon}
-                onChange={(e) => setCarbon(parseFloat(e.target.value))}
-                className="eco-slider"
-              />
-            </div>
-
-            <div>
-              <div className="flex justify-between text-gray-400 font-semibold mb-1">
-                <span>Social Responsibility Score</span>
-                <span className="text-emerald-400 font-bold">{social}%</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={social}
-                onChange={(e) => setSocial(parseInt(e.target.value))}
-                className="eco-slider"
-              />
-            </div>
-
-            <div>
-              <div className="flex justify-between text-gray-400 font-semibold mb-1">
-                <span>Governance Integrity Score</span>
-                <span className="text-emerald-400 font-bold">{gov}%</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={gov}
-                onChange={(e) => setGov(parseInt(e.target.value))}
-                className="eco-slider"
-              />
+            {/* Recommended Target Levels suggestion inside form */}
+            <div className="p-3.5 bg-emerald-950/20 rounded-xl border border-emerald-500/10 space-y-1.5">
+              <span className="text-emerald-400 font-bold flex items-center gap-1">
+                <Target className="h-3.5 w-3.5" /> Recommended Target Levels
+              </span>
+              <p className="text-gray-400 text-[10px] leading-relaxed">
+                For a campus of your scale:
+                <br />• Recommended Energy: <strong>&lt; 4000 kWh</strong>
+                <br />• Recommended Renewable Share: <strong>&gt; 45%</strong>
+              </p>
             </div>
 
             <button
@@ -216,7 +184,7 @@ export default function EcoGiniPage() {
         {/* Results Panel */}
         <div className="glass-card lg:col-span-2 space-y-6">
           {result ? (
-            <div className="space-y-6 text-xs">
+            <div className="space-y-6">
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
@@ -232,7 +200,7 @@ export default function EcoGiniPage() {
                 </span>
               </div>
 
-              {/* Real Google Maps embed for target location */}
+              {/* Real Google Maps embed */}
               <div className="rounded-xl overflow-hidden border border-emerald-500/10 h-48 bg-black/40 relative">
                 <iframe
                   title="Google Map Location View"
@@ -245,11 +213,11 @@ export default function EcoGiniPage() {
                 </div>
               </div>
 
-              {/* Dynamic Interactive Landscape Image */}
+              {/* Landscape image indicator */}
               <div className="relative rounded-2xl overflow-hidden border border-emerald-500/10 bg-black/40 h-48 flex items-center justify-center">
                 <img 
                   src={getLevelImage(result.sustainability_level)} 
-                  alt="Sustainability Level Representation" 
+                  alt="Sustainability Level" 
                   className="w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent flex flex-col justify-end p-4">
@@ -293,7 +261,7 @@ export default function EcoGiniPage() {
             <div className="h-full flex flex-col items-center justify-center text-center p-12">
               <Sparkles className="h-12 w-12 text-emerald-500/30 animate-bounce mb-3" />
               <h3 className="text-sm font-bold text-white">Simulator Ready</h3>
-              <p className="text-xs text-gray-400 max-w-sm mt-1">Configure your organization parameters on the left to simulate audited ratings.</p>
+              <p className="text-xs text-gray-400 max-w-sm mt-1">Configure parameters on the left to simulate audited ratings.</p>
             </div>
           )}
         </div>

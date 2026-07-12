@@ -58,7 +58,7 @@ class GreenwashingDetectorAI:
     ]
 
     @staticmethod
-    def analyze(text):
+    def analyze(text, topic="", cost=0.0):
         text_lower = text.lower()
         
         # Count suspicious claims
@@ -92,10 +92,29 @@ class GreenwashingDetectorAI:
         else:
             suggestions.append("Maintain transparency and publish raw environmental data on your open public portal.")
             
+        better_plan = ""
+        if text.strip():
+            better_plan = f"Better Plan Suggestion: Replace vague claims with: 'Our facility reduced energy footprint by 12% in Q1 verified under ISO 14001 certification.'"
+            
+        new_plan = ""
+        if topic and cost > 0:
+            if "solar" in topic.lower():
+                new_plan = f"New Solar Plan (Budget: ${cost:,.2f}): Install a {min(50.0, cost / 1200.0):.1f} kW solar panel grid on the warehouse roof. Expected annual offset: {cost * 0.8:.0f} kg CO2. ROI: 4.2 Years."
+            elif "wind" in topic.lower():
+                new_plan = f"New Wind Plan (Budget: ${cost:,.2f}): Install a small-scale {min(20.0, cost / 2500.0):.1f} kW wind turbine generator. Expected annual offset: {cost * 0.6:.0f} kg CO2. ROI: 6.5 Years."
+            elif "water" in topic.lower() or "hydro" in topic.lower():
+                new_plan = f"New Hydro Plan (Budget: ${cost:,.2f}): Install a micro-hydro turbine for local stream flow. Expected annual offset: {cost * 0.95:.0f} kg CO2. ROI: 3.5 Years."
+            elif "biogas" in topic.lower() or "waste" in topic.lower():
+                new_plan = f"New Biogas Plan (Budget: ${cost:,.2f}): Implement a farm-scale anaerobic organic waste digester. Expected annual offset: {cost * 0.7:.0f} kg CO2. ROI: 5.0 Years."
+            else:
+                new_plan = f"New Sustainability Plan (Budget: ${cost:,.2f}): Upgrade lighting to smart LED sensors and implement local recycling bins. Expected annual offset: {cost * 0.5:.0f} kg CO2."
+
         return {
             "greenwashing_probability": round(probability, 1),
             "explanation": explanations,
-            "suggestions": suggestions
+            "suggestions": suggestions,
+            "better_plan": better_plan,
+            "new_plan": new_plan
         }
 
 class EcoGiniScorerAI:
@@ -245,4 +264,40 @@ class RenewableEnergyAI:
             "annual_carbon_offset_kg": round(annual_carbon_offset_kg, 1),
             "equivalent_trees_planted": int(annual_carbon_offset_kg / 22.0)
         }
+
+    @staticmethod
+    def predict_water(flow_rate_m3s, head_height_m, efficiency_coef=0.85):
+        # Hydroelectric power formula: P = Q * H * g * eta (kW)
+        power_kw = flow_rate_m3s * head_height_m * 9.81 * efficiency_coef
+        daily_generation = power_kw * 24.0
+        monthly_generation = daily_generation * 30
+        annual_generation = daily_generation * 365
+        annual_carbon_offset_kg = annual_generation * 0.85
+
+        return {
+            "daily_generation_kwh": round(daily_generation, 1),
+            "monthly_generation_kwh": round(monthly_generation, 1),
+            "annual_generation_kwh": round(annual_generation, 1),
+            "annual_carbon_offset_kg": round(annual_carbon_offset_kg, 1),
+            "equivalent_trees_planted": int(annual_carbon_offset_kg / 22.0)
+        }
+
+    @staticmethod
+    def predict_biogas(waste_feedstock_kg, efficiency_coef=0.60):
+        # Biogas generation: 1 kg organic waste yields approx 0.15 m3 biogas
+        # 1 m3 biogas contains approx 6 kWh thermal energy; converted to electricity with generator efficiency
+        energy_per_kg_kwh = 0.15 * 6.0 * efficiency_coef
+        daily_generation = waste_feedstock_kg * energy_per_kg_kwh
+        monthly_generation = daily_generation * 30
+        annual_generation = daily_generation * 365
+        annual_carbon_offset_kg = annual_generation * 0.85
+
+        return {
+            "daily_generation_kwh": round(daily_generation, 1),
+            "monthly_generation_kwh": round(monthly_generation, 1),
+            "annual_generation_kwh": round(annual_generation, 1),
+            "annual_carbon_offset_kg": round(annual_carbon_offset_kg, 1),
+            "equivalent_trees_planted": int(annual_carbon_offset_kg / 22.0)
+        }
+
 

@@ -18,7 +18,8 @@ export default function GamificationPage() {
   const tasks = [
     { id: 1, title: "Plant the Targeted Tree of the Week", desc: "Plant a Mangrove tree in the plantation simulator.", reward: 200, xp: 50, category: "Environmental", image: "/images/challenge_tree_planting.png" },
     { id: 2, title: "Clean the Local Lake Drive", desc: "Clean garbage and plastics around local water bodies.", reward: 350, xp: 100, category: "Social Welfare", image: "/images/challenge_lake_cleanup.png" },
-    { id: 3, title: "Social Welfare Mentoring", desc: "Spend 2 hours mentoring underserved youths on green technology.", reward: 150, xp: 40, category: "Governance/Social", image: "/images/eco_thriving_city.png" }
+    { id: 3, title: "Social Welfare Mentoring", desc: "Spend 2 hours mentoring underserved youths on green technology.", reward: 150, xp: 40, category: "Governance/Social", image: "/images/eco_thriving_city.png" },
+    { id: 4, title: "Implement Biogas Waste Feedstock", desc: "Convert 50 kg of organic waste feedstock into biogas cooking fuel offsets.", reward: 250, xp: 75, category: "Biogas usage", image: "/images/eco_thriving_city.png" }
   ];
 
   const rewards = [
