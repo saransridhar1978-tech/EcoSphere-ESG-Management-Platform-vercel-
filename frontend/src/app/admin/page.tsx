@@ -57,7 +57,7 @@ export default function AdminPage() {
       if (cRes.ok) setContentsList(await cRes.json());
       if (lRes.ok) setActivityLogs(await lRes.json());
     } catch (err) {
-      console.error("Connection to admin portal failed. Using mock lists.");
+      console.error("Connection to admin portal failed. Using mock lists. Error:", err);
       setUsersList([
         { id: 1, name: "EcoBox Solutions", email: "audit@ecobox.com", role: "Organization", status: "Active", sustainability_score: 84.5, created_date: "2026-07-10T10:15:00" },
         { id: 2, name: "Apex Packaging", email: "info@apex.com", role: "Organization", status: "Blocked", sustainability_score: 54.2, created_date: "2026-07-11T12:00:00" },
