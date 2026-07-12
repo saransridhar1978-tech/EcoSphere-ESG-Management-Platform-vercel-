@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Odoo Action for EcoSphere OWL Client Dashboard -->
+    <record id="action_ecosphere_dashboard" model="ir.actions.client">
+        <field name="name">EcoSphere AI Dashboard</field>
+        <field name="tag">ecosphere_ai.dashboard</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Top-Level Menu -->
+    <menuitem id="menu_ecosphere_root"
+              name="EcoSphere AI"
+              web_icon="ecosphere_ai,static/description/icon.png"
+              sequence="10"/>
+
+    <!-- Dashboard Submenu -->
+    <menuitem id="menu_ecosphere_dashboard"
+              name="ESG Dashboard"
+              parent="menu_ecosphere_root"
+              action="action_ecosphere_dashboard"
+              sequence="1"/>
+</odoo>

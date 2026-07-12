@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSphere AI - Autonomous ESG Intelligence System</title>
+    <!-- Tailwind CSS for layout structure -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for real-time interactive graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome for professional icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Glassmorphism Green Premium Theme -->
+    <link rel="stylesheet" href="ecosphere_ai/static/src/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            950: '#022c22',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="p-6 md:p-12">
+
+    <div class="ecosphere-dashboard max-w-7xl mx-auto flex flex-col gap-6">
+        
+        <!-- Header Bar -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-emerald-950 glass-card gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-white flex items-center gap-2">
+                    <span class="text-emerald-400"><i class="fa fa-globe"></i> EcoSphere</span> AI
+                    <span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full uppercase tracking-wider font-bold border border-emerald-500/30">Autonomous ESG</span>
+                </h1>
+                <p class="text-gray-400 text-sm mt-1">Organisational Environmental, Social & Governance Operations Simulator</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="theme-toggle-btn" title="Toggle Theme">
+                    <i class="fa fa-adjust"></i>
+                </button>
+                <!-- Export Report Dropdown -->
+                <div class="relative group">
+                    <button class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-emerald-500/20 border border-emerald-400/20">
+                        <i class="fa fa-download"></i> Export Reports
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-gray-950 border border-emerald-500/30 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <a href="#" onclick="window.dashboard.exportReport('pdf')" class="block px-4 py-2 text-xs text-gray-300 hover:bg-emerald-500/20 hover:text-white rounded-t-xl">Export PDF Report</a>
+                        <a href="#" onclick="window.dashboard.exportReport('excel')" class="block px-4 py-2 text-xs text-gray-300 hover:bg-emerald-500/20 hover:text-white">Export Excel Sheet</a>
+                        <a href="#" onclick="window.dashboard.exportReport('csv')" class="block px-4 py-2 text-xs text-gray-300 hover:bg-emerald-500/20 hover:text-white rounded-b-xl">Export CSV Data</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Metrics Row -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="glass-card">
+                <span class="text-xs text-gray-400 font-semibold uppercase">Overall ESG Score</span>
+                <div class="text-3xl font-bold text-emerald-400 mt-1">84.5 / 100</div>
+                <div class="w-full bg-emerald-950 h-1 rounded-full mt-2">
+                    <div class="bg-emerald-400 h-1 rounded-full" style="width: 84.5%"></div>
+                </div>
+            </div>
+            <div class="glass-card">
+                <span class="text-xs text-gray-400 font-semibold uppercase">Carbon Reduction (YTD)</span>
+                <div class="text-3xl font-bold text-cyan-400 mt-1">-12.4%</div>
+                <span class="text-[10px] text-emerald-400 font-semibold"><i class="fa fa-arrow-up"></i> Outperforming targets</span>
+            </div>
+            <div class="glass-card">
+                <span class="text-xs text-gray-400 font-semibold uppercase">Green Suppliers</span>
+                <div class="text-3xl font-bold text-emerald-400 mt-1">75% Verified</div>
+                <span class="text-[10px] text-gray-400">3 alternative proposals ready</span>
+            </div>
+            <div class="glass-card">
+                <span class="text-xs text-gray-400 font-semibold uppercase">Compliance Level</span>
+                <div class="text-3xl font-bold text-white mt-1">92% Met</div>
+                <span class="text-[10px] text-amber-400 font-semibold">1 urgent reminder pending</span>
+            </div>
+        </div>
+
+        <!-- Row 1: ESG Health Score & Carbon Intelligence -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Health Score Widget -->
+            <div class="glass-card flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-bold text-gray-200">ESG Health Score</h3>
+                        <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold border border-emerald-500/30">Active</span>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-4">
+                        <span class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">84.5</span>
+                        <span class="text-gray-400 text-sm">/ 100</span>
+                    </div>
+                    <!-- Mini scores breakdown -->
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-400">Environmental (E) Health</span>
+                                <span class="text-emerald-400 font-bold">81.2%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-1.5">
+                                <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 81.2%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-400">Social (S) Health</span>
+                                <span class="text-emerald-400 font-bold">88.0%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-1.5">
+                                <div class="bg-emerald-400 h-1.5 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-400">Governance (G) Health</span>
+                                <span class="text-emerald-400 font-bold">84.3%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-1.5">
+                                <div class="bg-cyan-500 h-1.5 rounded-full" style="width: 84.3%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-emerald-950 text-xs">
+                    <strong class="text-emerald-400 block mb-1">AI Health Diagnostics:</strong>
+                    <p class="text-gray-400">Overall score boosted by corporate inclusion metrics. Carbon intensity remains a key weakness.</p>
+                </div>
+            </div>
+
+            <!-- Carbon footprint breakdown chart -->
+            <div class="glass-card lg:col-span-2">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-200">Carbon Intelligence Engine</h3>
+                        <p class="text-xs text-gray-400">Scope 1, 2, and 3 monthly calculations</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="px-3 py-1 text-xs rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Monthly</button>
+                        <button class="px-3 py-1 text-xs rounded bg-gray-800 text-gray-400">Yearly</button>
+                    </div>
+                </div>
+                <!-- Chart canvas -->
+                <div style="height: 200px; position: relative;">
+                    <canvas id="carbonTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Digital Twin Simulator & Risk Prediction -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Simulator Module -->
+            <div class="glass-card">
+                <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center gap-2">
+                    <i class="fa fa-cube text-emerald-400 animate-pulse"></i> Digital Twin ESG Simulator
+                </h3>
+                <p class="text-xs text-gray-400 mb-4">Simulate operational actions to predict emissions offset, ROI, and financial savings.</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-300">
+                            <span>Solar Panel Target Capacity</span>
+                            <span class="text-emerald-400 font-bold" id="lbl_sim_solar">120 kW</span>
+                        </div>
+                        <input type="range" id="sim_solar" min="0" max="500" value="120" class="eco-slider"/>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-300">
+                            <span>Hybrid Work Policy</span>
+                            <span class="text-emerald-400 font-bold" id="lbl_sim_hybrid">40%</span>
+                        </div>
+                        <input type="range" id="sim_hybrid" min="0" max="100" value="40" class="eco-slider"/>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-300">
+                            <span>EV Fleet Transition</span>
+                            <span class="text-emerald-400 font-bold" id="lbl_sim_ev">20%</span>
+                        </div>
+                        <input type="range" id="sim_ev" min="0" max="100" value="20" class="eco-slider"/>
+                    </div>
+                </div>
+
+                <!-- Simulator Projections Output -->
+                <div class="grid grid-cols-3 gap-3 mt-6 pt-4 border-t border-emerald-950 text-center">
+                    <div class="bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/20">
+                        <span class="block text-[10px] text-gray-400 uppercase">Carbon Saved</span>
+                        <span class="text-sm font-extrabold text-emerald-400" id="val_proj_carbon">32.5 t/yr</span>
+                    </div>
+                    <div class="bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/20">
+                        <span class="block text-[10px] text-gray-400 uppercase">Annual Savings</span>
+                        <span class="text-sm font-extrabold text-emerald-400" id="val_proj_savings">$18,400</span>
+                    </div>
+                    <div class="bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/20">
+                        <span class="block text-[10px] text-gray-400 uppercase">ESG Boost</span>
+                        <span class="text-sm font-extrabold text-cyan-400" id="val_proj_esg">+5.4 pts</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESG Risk Predictions -->
+            <div class="glass-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-200 flex items-center gap-2">
+                        <i class="fa fa-exclamation-triangle text-amber-500"></i> AI ESG Risk Predictions
+                    </h3>
+                    <span class="text-xs text-gray-400">Calculated: Hourly</span>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-300 font-semibold">Logistics &amp; Fleet</span>
+                            <span class="font-bold text-red-400">58% (High Risk)</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-2">
+                            <div class="bg-red-500 h-2 rounded-full" style="width: 58%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-300 font-semibold">Manufacturing</span>
+                            <span class="font-bold text-amber-400">45% (Medium Risk)</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-2">
+                            <div class="bg-amber-500 h-2 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-300 font-semibold">Purchasing</span>
+                            <span class="font-bold text-emerald-400">38% (Low-Med)</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-2">
+                            <div class="bg-emerald-500 h-2 rounded-full" style="width: 38%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-300 font-semibold">Administration</span>
+                            <span class="font-bold text-emerald-400">12% (Low Risk)</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-2">
+                            <div class="bg-emerald-500 h-2 rounded-full" style="width: 12%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Green Suppliers & Gamification -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Smart Supplier Directory -->
+            <div class="glass-card">
+                <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center gap-2">
+                    <i class="fa fa-truck text-emerald-400"></i> Smart Green Supplier Engine
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="text-gray-400 border-b border-emerald-950 uppercase">
+                            <tr>
+                                <th class="py-2">Supplier</th>
+                                <th class="py-2">ESG Score</th>
+                                <th class="py-2">Carbon/Tonne</th>
+                                <th class="py-2">Distance</th>
+                                <th class="py-2">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-300 divide-y divide-emerald-950/50">
+                            <tr>
+                                <td class="py-3 font-semibold text-white">EcoBox Solutions</td>
+                                <td class="py-3">
+                                    <span class="px-2 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">94</span>
+                                </td>
+                                <td class="py-3">45 kg</td>
+                                <td class="py-3">30 km</td>
+                                <td class="py-3"><span class="text-gray-500">Verified Partner</span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 font-semibold text-white">GreenTransit Corp</td>
+                                <td class="py-3">
+                                    <span class="px-2 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">88</span>
+                                </td>
+                                <td class="py-3">75 kg</td>
+                                <td class="py-3">65 km</td>
+                                <td class="py-3"><span class="text-gray-500">Verified Partner</span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 font-semibold text-white">Apex Packaging</td>
+                                <td class="py-3">
+                                    <span class="px-2 py-0.5 rounded font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">58</span>
+                                </td>
+                                <td class="py-3">140 kg</td>
+                                <td class="py-3">180 km</td>
+                                <td class="py-3">
+                                    <button onclick="window.dashboard.suggestAlternative(3)" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1 px-2 rounded-lg transition-all border border-emerald-500/30">Auto-Swap</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 font-semibold text-white">Acme Logistics</td>
+                                <td class="py-3">
+                                    <span class="px-2 py-0.5 rounded font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">52</span>
+                                </td>
+                                <td class="py-3">195 kg</td>
+                                <td class="py-3">290 km</td>
+                                <td class="py-3">
+                                    <button onclick="window.dashboard.suggestAlternative(4)" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1 px-2 rounded-lg transition-all border border-emerald-500/30">Auto-Swap</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Green Gamification Engine -->
+            <div class="glass-card flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa fa-trophy text-yellow-500 animate-bounce"></i> Employee Green Gamification
+                    </h3>
+                    <div class="flex items-center gap-4 bg-emerald-950/20 p-4 rounded-xl border border-emerald-500/10 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-3xl">
+                            🌱
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Avatar Status: <span class="text-emerald-400" id="val_avatar_status">Plant</span></h4>
+                            <p class="text-xs text-gray-400" id="val_xp_info">Level 3 (XP: 240 / 300)</p>
+                            <div class="w-48 bg-emerald-950 h-1.5 rounded-full mt-1 border border-emerald-500/10">
+                                <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Badge Achievements -->
+                    <div>
+                        <span class="text-xs font-bold text-gray-400 block mb-2">Unlocked Badges</span>
+                        <div class="flex gap-2">
+                            <span class="bg-emerald-950/60 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-xl text-emerald-300">💡 Energy Saver</span>
+                            <span class="bg-emerald-950/60 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-xl text-emerald-300">🚗 Carpool Hero</span>
+                            <span class="bg-gray-900 text-xs px-2.5 py-1 rounded-xl text-gray-600 border border-transparent">🗑️ Zero Waste (Locked)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-emerald-950 flex justify-between items-center text-xs">
+                    <span class="text-gray-400">Balance: <strong class="text-amber-400 font-bold" id="val_coins_info">1,250 Eco Coins</strong></span>
+                    <button id="btn_redeem_coins" class="text-xs bg-emerald-950 text-emerald-400 hover:bg-emerald-900 border border-emerald-500/30 py-1.5 px-3 rounded-lg font-semibold transition-all">Redeem Rewards</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 4: AI CSR Planner & Product Passport & News -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- CSR Planner -->
+            <div class="glass-card">
+                <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center gap-2">
+                    <i class="fa fa-calendar-check text-cyan-400"></i> AI CSR Planner
+                </h3>
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="text-gray-400 font-semibold">Budget Limit ($)</label>
+                        <input type="number" id="csr_budget_input" value="8000" class="w-full bg-gray-950 border border-emerald-950 rounded-xl p-2.5 text-white mt-1 focus:border-emerald-500 focus:outline-none"/>
+                    </div>
+                    <div>
+                        <label class="text-gray-400 font-semibold">Focus Campaign Objective</label>
+                        <select id="csr_objective_select" class="w-full bg-gray-950 border border-emerald-950 rounded-xl p-2.5 text-white mt-1 focus:border-emerald-500 focus:outline-none">
+                            <option value="planting">Tree Planting &amp; Reforestation</option>
+                            <option value="recycling">Waste &amp; E-Waste Drive</option>
+                            <option value="emissions">Carbon Footprint Reduction</option>
+                        </select>
+                    </div>
+                    <button id="btn_plan_csr" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-2.5 rounded-xl text-white transition-all border border-emerald-500/30 mt-2">Generate Campaign Proposal</button>
+
+                    <div id="csr_result_container" class="bg-emerald-950/20 p-2.5 rounded-xl border border-cyan-500/20 mt-2" style="display:none;">
+                        <strong class="text-cyan-400 block mb-1">Recommended Campaign:</strong>
+                        <p class="text-gray-300 text-[11px]" id="csr_result_box"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Passport -->
+            <div class="glass-card">
+                <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center gap-2">
+                    <i class="fa fa-qrcode text-emerald-400"></i> Green Product Passport
+                </h3>
+                <p class="text-xs text-gray-400 mb-4">Scan the passport to audit recycled materials index and lifecycle metrics.</p>
+                
+                <div class="flex flex-col items-center justify-center p-4 bg-gray-950 rounded-xl border border-emerald-950/80">
+                    <div class="w-24 h-24 bg-white p-2 rounded-lg flex items-center justify-center mb-3">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=ecosphere-ai-product-passport-001" alt="Passport QR" class="w-full h-full"/>
+                    </div>
+                    <div class="text-center text-[10px] text-gray-400 space-y-1">
+                        <span class="block font-semibold text-white text-xs">EcoSphere Smart Bottle v2</span>
+                        <span class="block">Material: 94% Ocean Plastic</span>
+                        <span class="block text-emerald-400 font-bold">100% Recyclable</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI ESG News Engine -->
+            <div class="glass-card">
+                <h3 class="text-lg font-bold text-gray-200 mb-3 flex items-center gap-2">
+                    <i class="fa fa-newspaper text-emerald-400"></i> AI ESG News Engine
+                </h3>
+                <div class="space-y-3 text-xs overflow-y-auto max-h-[220px] pr-1">
+                    <div class="p-2.5 bg-gray-950/60 rounded-xl border border-emerald-950/80">
+                        <div class="flex justify-between font-bold text-emerald-400 mb-1">
+                            <span>EU CSDDD Compliance</span>
+                            <span class="text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30">Jan 2027</span>
+                        </div>
+                        <p class="text-gray-300 text-[11px] mb-1">Mandatory scope 3 value-chain compliance audit requirements start next year.</p>
+                        <span class="text-[10px] text-gray-500">Impact: High. Supply chain auditing needed.</span>
+                    </div>
+                    <div class="p-2.5 bg-gray-950/60 rounded-xl border border-emerald-950/80">
+                        <div class="flex justify-between font-bold text-emerald-400 mb-1">
+                            <span>Green Fleet Subsidies</span>
+                            <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30">Dec 2026</span>
+                        </div>
+                        <p class="text-gray-300 text-[11px] mb-1">Government offering 25% tax credits on fleet electric vehicle conversions.</p>
+                        <span class="text-[10px] text-gray-500">Impact: Positive. ROI on EV simulator will improve.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Copilot Assistant Toggle Bubble -->
+        <div class="copilot-bubble animate-float">
+            <span class="text-2xl">🤖</span>
+        </div>
+
+        <!-- Floating Copilot Chat Window -->
+        <div id="copilot-panel" class="fixed bottom-28 right-8 w-96 bg-gray-950/95 backdrop-blur-lg border border-emerald-500/30 rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col" style="height: 480px; display: none;">
+            <div class="bg-gradient-to-r from-emerald-900 to-emerald-950 p-4 border-b border-emerald-500/20 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🤖</span>
+                    <div>
+                        <h4 class="text-sm font-bold text-white">EcoSphere Copilot</h4>
+                        <span class="text-[10px] text-emerald-400">AI Intelligence Core Online</span>
+                    </div>
+                </div>
+                <button id="btn_close_copilot" class="text-gray-400 hover:text-white text-lg font-bold">&times;</button>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="flex-1 p-4 overflow-y-auto space-y-3 text-xs" id="copilot-messages">
+                <div class="p-3 rounded-lg max-w-[85%] bg-gray-900 text-gray-200 mr-auto">
+                    <p class="whitespace-pre-wrap">Hello! I am EcoSphere AI Copilot. How can I assist you with your ESG operations today?</p>
+                </div>
+            </div>
+
+            <!-- Quick Prompts -->
+            <div class="p-2 bg-gray-900/40 border-t border-emerald-950 flex gap-1.5 overflow-x-auto whitespace-nowrap">
+                <button onclick="window.dashboard.sendPrompt('Why did carbon emissions increase this month?')" class="bg-emerald-950/60 hover:bg-emerald-900/40 border border-emerald-500/30 text-emerald-300 text-[10px] py-1 px-2.5 rounded-full transition-all">Why Carbon increased?</button>
+                <button onclick="window.dashboard.sendPrompt('Suggest methods to reduce emissions.')" class="bg-emerald-950/60 hover:bg-emerald-900/40 border border-emerald-500/30 text-emerald-300 text-[10px] py-1 px-2.5 rounded-full transition-all">Reduction tips</button>
+            </div>
+
+            <!-- Input Footer -->
+            <div class="p-3 border-t border-emerald-950 flex gap-2">
+                <input type="text" id="chat_input_field" placeholder="Ask anything about company ESG..." class="flex-1 bg-gray-900 border border-emerald-950 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"/>
+                <button id="btn_send_chat" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition-all border border-emerald-500/30">Send</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Instantiate Core dashboard controller -->
+    <script src="ecosphere_ai/static/src/js/dashboard.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            window.dashboard = new EcoSphere(document.body);
+        });
+    </script>
+</body>
+</html>

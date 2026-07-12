@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ecosphere_carbon,ecosphere.carbon.emission,model_ecosphere_carbon_emission,base.group_user,1,1,1,1
+access_ecosphere_factor,ecosphere.emission.factor,model_ecosphere_emission_factor,base.group_user,1,1,1,1
+access_ecosphere_supplier,ecosphere.supplier.esg,model_ecosphere_supplier_esg,base.group_user,1,1,1,1
+access_ecosphere_risk,ecosphere.risk.prediction,model_ecosphere_risk_prediction,base.group_user,1,1,1,1
+access_ecosphere_digital_twin,ecosphere.digital.twin.scenario,model_ecosphere_digital_twin_scenario,base.group_user,1,1,1,1
+access_ecosphere_employee_profile,ecosphere.employee.profile,model_ecosphere_employee_profile,base.group_user,1,1,1,1
+access_ecosphere_csr_campaign,ecosphere.csr.campaign,model_ecosphere_csr_campaign,base.group_user,1,1,1,1

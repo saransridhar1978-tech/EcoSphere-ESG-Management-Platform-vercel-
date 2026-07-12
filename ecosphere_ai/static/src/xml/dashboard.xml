@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- EcoSphere AI Dashboard Client Action Template -->
+    <t t-name="ecosphere_ai.Dashboard" owl="1">
+        <div class="ecosphere-dashboard flex flex-col gap-6">
+            <!-- Header bar with title, theme toggler and Export tools -->
+            <header class="flex justify-between items-center pb-4 border-b border-gray-800 glass-card">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-white flex items-center gap-2">
+                        <span class="text-emerald-500">EcoSphere</span> AI
+                        <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-full uppercase tracking-wider font-bold">Autonomous ESG</span>
+                    </h1>
+                    <p class="text-gray-400 text-sm">Organisational Environmental, Social &amp; Governance Intelligence Suite</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button t-on-click="toggleTheme" class="theme-toggle-btn" title="Toggle Theme">
+                        <i class="fa fa-adjust"></i>
+                    </button>
+                    <!-- Export Report Dropdown -->
+                    <div class="relative group">
+                        <button class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-lg flex items-center gap-2 transition-all shadow-lg shadow-emerald-500/20">
+                            <i class="fa fa-download"></i> Export Reports
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-gray-900 border border-emerald-500/30 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <a href="#" t-on-click="() => this.exportReport('pdf')" class="block px-4 py-2 text-sm text-gray-300 hover:bg-emerald-500/20 hover:text-white">Export PDF Report</a>
+                            <a href="#" t-on-click="() => this.exportReport('excel')" class="block px-4 py-2 text-sm text-gray-300 hover:bg-emerald-500/20 hover:text-white">Export Excel Sheet</a>
+                            <a href="#" t-on-click="() => this.exportReport('csv')" class="block px-4 py-2 text-sm text-gray-300 hover:bg-emerald-500/20 hover:text-white">Export CSV Data</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Row 1: ESG Health Score & Carbon Intelligence -->
+            <div class="grid-cols-3">
+                <!-- Health Score Widget -->
+                <div class="glass-card flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-lg font-bold text-gray-200">ESG Health Score</h3>
+                            <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">Active Monitoring</span>
+                        </div>
+                        <div class="flex items-baseline gap-2 mb-4">
+                            <span class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">84.5</span>
+                            <span class="text-gray-400 text-sm">/ 100</span>
+                        </div>
+                        <!-- Mini scores breakdown -->
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-gray-400">Environmental (E)</span>
+                                    <span class="text-emerald-400 font-bold">81.2%</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-1.5">
+                                    <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 81.2%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-gray-400">Social (S)</span>
+                                    <span class="text-emerald-400 font-bold">88.0%</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-1.5">
+                                    <div class="bg-emerald-400 h-1.5 rounded-full" style="width: 88%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-gray-400">Governance (G)</span>
+                                    <span class="text-emerald-400 font-bold">84.3%</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-1.5">
+                                    <div class="bg-cyan-500 h-1.5 rounded-full" style="width: 84.3%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-gray-800 text-xs">
+                        <strong class="text-emerald-400 block mb-1">AI Recommendation:</strong>
+                        <p class="text-gray-300">Upgrade shipping fleet to electric vehicles and enforce supplier packaging audit guidelines to gain +4.5 points.</p>
+                    </div>
+                </div>
+
+                <!-- Carbon footprint breakdown chart -->
+                <div class="glass-card col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-200">Carbon Intelligence Engine</h3>
+                            <p class="text-xs text-gray-400">Emissions calculated across all scopes</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="px-3 py-1 text-xs rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Monthly</button>
+                            <button class="px-3 py-1 text-xs rounded bg-gray-800 text-gray-400">Yearly</button>
+                        </div>
+                    </div>
+                    <!-- Chart canvas -->
+                    <div style="height: 180px; position: relative;">
+                        <canvas id="carbonTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Digital Twin Simulator & Risk Prediction -->
+            <div class="grid-cols-2">
+                <!-- Simulator Module -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa fa-cube text-emerald-400"></i> Digital Twin ESG Simulator
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-4">Simulate operational adjustments to predict cost savings, ROI and emissions impact.</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-300">
+                                <span>Solar Panel Target Capacity (kW)</span>
+                                <span class="text-emerald-400 font-bold" t-esc="state.sim_solar + ' kW'"></span>
+                            </div>
+                            <input type="range" min="0" max="500" t-model="state.sim_solar" t-on-input="recalculateTwin" class="eco-slider"/>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-300">
+                                <span>Hybrid Work Policy (%)</span>
+                                <span class="text-emerald-400 font-bold" t-esc="state.sim_hybrid + '%'"></span>
+                            </div>
+                            <input type="range" min="0" max="100" t-model="state.sim_hybrid" t-on-input="recalculateTwin" class="eco-slider"/>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-300">
+                                <span>EV Fleet Transition (%)</span>
+                                <span class="text-emerald-400 font-bold" t-esc="state.sim_ev + '%'"></span>
+                            </div>
+                            <input type="range" min="0" max="100" t-model="state.sim_ev" t-on-input="recalculateTwin" class="eco-slider"/>
+                        </div>
+                    </div>
+
+                    <!-- Simulator Projections Output -->
+                    <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-gray-800 text-center">
+                        <div class="bg-emerald-950/40 p-2 rounded-lg border border-emerald-500/20">
+                            <span class="block text-xs text-gray-400">Carbon Saved</span>
+                            <span class="text-sm font-extrabold text-emerald-400" t-esc="state.proj_carbon + ' t/yr'"></span>
+                        </div>
+                        <div class="bg-emerald-950/40 p-2 rounded-lg border border-emerald-500/20">
+                            <span class="block text-xs text-gray-400">Annual Savings</span>
+                            <span class="text-sm font-extrabold text-emerald-400" t-esc="'$' + state.proj_savings"></span>
+                        </div>
+                        <div class="bg-emerald-950/40 p-2 rounded-lg border border-emerald-500/20">
+                            <span class="block text-xs text-gray-400">ESG Boost</span>
+                            <span class="text-sm font-extrabold text-cyan-400" t-esc="'+' + state.proj_esg + ' pts'"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ESG Risk Predictions -->
+                <div class="glass-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-200 flex items-center gap-2">
+                            <i class="fa fa-exclamation-triangle text-amber-500"></i> AI ESG Risk Predictions
+                        </h3>
+                        <span class="text-xs text-gray-400">Refreshed: Live</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <t t-foreach="state.risk_departments" t-as="dept" t-key="dept.id">
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-gray-300 font-semibold" t-esc="dept.name"></span>
+                                    <span t-attf-class="font-bold #{dept.level == 'Critical' ? 'text-red-500' : (dept.level == 'High' ? 'text-amber-500' : 'text-emerald-400')}" t-esc="dept.score + '% (' + dept.level + ')'"></span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2">
+                                    <div t-attf-class="h-2 rounded-full #{dept.level == 'Critical' ? 'bg-red-500' : (dept.level == 'High' ? 'bg-amber-500' : 'bg-emerald-500')}" t-attf-style="width: #{dept.score}%"></div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Green Suppliers & Gamification -->
+            <div class="grid-cols-2">
+                <!-- Smart Supplier Directory -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center gap-2">
+                        <i class="fa fa-truck text-emerald-400"></i> Smart Green Supplier Engine
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="text-gray-400 border-b border-gray-800 uppercase">
+                                <tr>
+                                    <th class="py-2">Supplier</th>
+                                    <th class="py-2">ESG Score</th>
+                                    <th class="py-2">Carbon/Tonne</th>
+                                    <th class="py-2">Distance</th>
+                                    <th class="py-2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-300 divide-y divide-gray-800/50">
+                                <t t-foreach="state.suppliers" t-as="sup" t-key="sup.id">
+                                    <tr>
+                                        <td class="py-3 font-semibold text-white" t-esc="sup.name"></td>
+                                        <td class="py-3">
+                                            <span t-attf-class="px-2 py-0.5 rounded font-bold #{sup.score >= 80 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}" t-esc="sup.score"></span>
+                                        </td>
+                                        <td class="py-3" t-esc="sup.carbon + ' kg'"></td>
+                                        <td class="py-3" t-esc="sup.distance + ' km'"></td>
+                                        <td class="py-3">
+                                            <button t-if="sup.score &lt; 70" t-on-click="() => this.suggestAlternative(sup.id)" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1 px-2 rounded">Auto-Swap</button>
+                                            <span t-else="" class="text-gray-500">Verified</span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Green Gamification Engine -->
+                <div class="glass-card flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center gap-2">
+                            <i class="fa fa-trophy text-yellow-500"></i> Employee Green Gamification
+                        </h3>
+                        <div class="flex items-center gap-4 bg-gray-900/60 p-4 rounded-xl border border-gray-800 mb-4">
+                            <!-- Avatar evolution stage -->
+                            <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-3xl">
+                                🌱
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Avatar Status: <span class="text-emerald-400" t-esc="state.user_avatar"></span></h4>
+                                <p class="text-xs text-gray-400" t-esc="'Level ' + state.user_level + ' (XP: ' + state.user_xp + ' / ' + (state.user_level * 100) + ')'"></p>
+                                <div class="w-48 bg-gray-800 h-1.5 rounded-full mt-1">
+                                    <div class="bg-emerald-500 h-1.5 rounded-full" t-attf-style="width: #{(state.user_xp % 100)}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Badge Achievements -->
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 block mb-2">Unlocked Badges</span>
+                            <div class="flex gap-2">
+                                <span class="bg-emerald-950/60 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full text-emerald-300">💡 Energy Saver</span>
+                                <span class="bg-emerald-950/60 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full text-emerald-300">🚗 Carpool Hero</span>
+                                <span class="bg-gray-800/80 text-xs px-2.5 py-1 rounded-full text-gray-500">🗑️ Zero Waste (Locked)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-800 flex justify-between items-center text-xs">
+                        <span class="text-gray-400">Balance: <strong class="text-amber-400" t-esc="state.user_coins + ' Eco Coins'"></strong></span>
+                        <button t-on-click="redeemCoins" class="text-xs text-emerald-400 hover:text-emerald-300 font-semibold">Redeem Rewards &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4: AI CSR Planner & Product Passport & News -->
+            <div class="grid-cols-3">
+                <!-- CSR Planner -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa fa-calendar-check text-cyan-400"></i> AI CSR Planner
+                    </h3>
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="text-gray-400">Budget ($)</label>
+                            <input type="number" t-model="state.csr_budget" class="w-full bg-gray-900 border border-gray-800 rounded p-1.5 text-white mt-1"/>
+                        </div>
+                        <div>
+                            <label class="text-gray-400">Focus Objective</label>
+                            <select t-model="state.csr_objective" class="w-full bg-gray-900 border border-gray-800 rounded p-1.5 text-white mt-1">
+                                <option value="planting">Tree Planting &amp; Reforestation</option>
+                                <option value="recycling">Waste &amp; E-Waste Drive</option>
+                                <option value="emissions">Carbon Footprint Reduction</option>
+                            </select>
+                        </div>
+                        <button t-on-click="planCSR" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-2 rounded text-white transition-all mt-2">Generate Campaign</button>
+
+                        <div t-if="state.csr_result" class="bg-gray-950 p-2.5 rounded border border-cyan-500/20 mt-2">
+                            <strong class="text-cyan-400 block mb-1">Recommended Campaign:</strong>
+                            <p class="text-gray-300" t-esc="state.csr_result"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Passport -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-bold text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa fa-qrcode text-emerald-400"></i> Green Product Passport
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-4">Validate carbon footprint and materials transparency by scanning standard codes.</p>
+                    
+                    <div class="flex flex-col items-center justify-center p-3 bg-gray-950 rounded-xl border border-gray-800">
+                        <!-- QR Simulation -->
+                        <div class="w-24 h-24 bg-white p-2 rounded-lg flex items-center justify-center mb-3">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&amp;data=ecosphere-ai-product-passport-001" alt="Passport QR" class="w-full h-full"/>
+                        </div>
+                        <div class="text-center text-[10px] text-gray-400">
+                            <span class="block font-semibold text-white">EcoSphere Smart Bottle v2</span>
+                            <span class="block">Carbon: 0.14 kg CO2e</span>
+                            <span class="block text-emerald-400">Recyclability: 100% Circular</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI ESG News Engine -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-bold text-gray-200 mb-3 flex items-center gap-2">
+                        <i class="fa fa-newspaper text-emerald-400"></i> AI ESG News Engine
+                    </h3>
+                    <div class="space-y-3 text-xs overflow-y-auto max-h-[220px] pr-1">
+                        <t t-foreach="state.news" t-as="item" t-key="item.id">
+                            <div class="p-2 bg-gray-900/60 rounded border border-gray-800/80">
+                                <div class="flex justify-between font-bold text-emerald-400 mb-1">
+                                    <span t-esc="item.title"></span>
+                                    <span class="text-[9px] bg-red-500/20 text-red-400 px-1 py-0.5 rounded" t-esc="item.deadline"></span>
+                                </div>
+                                <p class="text-gray-300 mb-1" t-esc="item.summary"></p>
+                                <span class="text-[10px] text-gray-500" t-esc="'Impact: ' + item.impact"></span>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Copilot Assistant Toggle Bubble -->
+            <div class="copilot-bubble animate-float" t-on-click="toggleCopilot">
+                <span class="text-2xl">🤖</span>
+            </div>
+
+            <!-- Floating Copilot Chat Window -->
+            <div t-if="state.copilot_open" class="fixed bottom-28 right-8 w-96 bg-gray-950/95 backdrop-blur-lg border border-emerald-500/30 rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col" style="height: 480px;">
+                <div class="bg-gradient-to-r from-emerald-900 to-emerald-950 p-4 border-b border-emerald-500/20 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🤖</span>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">EcoSphere Copilot</h4>
+                            <span class="text-[10px] text-emerald-400">AI Intelligence Core Online</span>
+                        </div>
+                    </div>
+                    <button t-on-click="toggleCopilot" class="text-gray-400 hover:text-white">&times;</button>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="flex-1 p-4 overflow-y-auto space-y-3 text-xs" id="copilot-messages">
+                    <t t-foreach="state.chat_history" t-as="msg" t-key="msg.id">
+                        <div t-attf-class="p-3 rounded-lg max-w-[85%] #{msg.sender == 'user' ? 'bg-emerald-600 text-white ml-auto' : 'bg-gray-900 text-gray-200 mr-auto'}">
+                            <p class="whitespace-pre-wrap" t-esc="msg.text"></p>
+                            <!-- Mini canvas if response demands a chart -->
+                            <div t-if="msg.chart" class="mt-2 bg-black/40 p-2 rounded border border-gray-800" style="height: 100px;">
+                                <canvas t-attf-id="'chart-' + msg.id"></canvas>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Quick Prompts -->
+                <div class="p-2 bg-gray-900/40 border-t border-gray-800 flex gap-1.5 overflow-x-auto whitespace-nowrap">
+                    <button t-on-click="() => this.sendPrompt('Why did carbon emissions increase this month?')" class="bg-gray-800 hover:bg-emerald-900/40 border border-gray-700 text-gray-300 text-[10px] py-1 px-2.5 rounded-full transition-all">Why Carbon increased?</button>
+                    <button t-on-click="() => this.sendPrompt('Suggest methods to reduce emissions.')" class="bg-gray-800 hover:bg-emerald-900/40 border border-gray-700 text-gray-300 text-[10px] py-1 px-2.5 rounded-full transition-all">Reduction tips</button>
+                </div>
+
+                <!-- Input Footer -->
+                <div class="p-3 border-t border-gray-800 flex gap-2">
+                    <input type="text" t-model="state.chat_input" t-on-keydown="handleKey" placeholder="Ask anything about company ESG..." class="flex-1 bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"/>
+                    <button t-on-click="sendChat" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition-all">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </t>
+</templates>
