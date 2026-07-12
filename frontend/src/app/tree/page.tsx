@@ -1,12 +1,13 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../AppContext';
-import { Trees, ShieldAlert, Sparkles, Clock, Target, Gift, DollarSign } from 'lucide-react';
+import { Trees, ShieldAlert, Sparkles, Clock, Target, Gift, DollarSign, Tag, Layers } from 'lucide-react';
 
 export default function TreePage() {
   const { user } = useApp();
   const [treeCount, setTreeCount] = useState(5); 
-  const [treeType, setTreeType] = useState('Teak'); // Default to Teak tree
+  const [category, setCategory] = useState('Timber'); // Tree Category
+  const [treeType, setTreeType] = useState('Teak'); // Tree Variety
   const [days, setDays] = useState(5); 
   
   const [targetTimeframe, setTargetTimeframe] = useState('Week'); 
@@ -19,6 +20,29 @@ export default function TreePage() {
     environmental_impact_rating: 12,
     equivalent_car_miles_saved: 1200
   });
+
+  // Tree category & variety mapping
+  const treeDatabase: Record<string, { name: string; info: string; factor: number; rate5Yr: number; rate10Yr: number }[]> = {
+    Timber: [
+      { name: 'Teak', info: 'Premium wood log value of ₹10,000 (5-7 yrs) and ₹18,000 (10 yrs).', factor: 20, rate5Yr: 10000, rate10Yr: 18000 },
+      { name: 'Mahogany', info: 'Durable reddish timber yielding ₹8,000 (5-7 yrs) and ₹15,000 (10 yrs).', factor: 18, rate5Yr: 8000, rate10Yr: 15000 }
+    ],
+    Carbon: [
+      { name: 'Mangrove', info: 'High carbon capture (25kg/yr). Yields ₹1,500 carbon credit value.', factor: 25, rate5Yr: 1500, rate10Yr: 3200 },
+      { name: 'Bamboo', info: 'Ultra fast growth. Yields ₹900 cellulose/offset credits.', factor: 22, rate5Yr: 900, rate10Yr: 2000 }
+    ],
+    Agriculture: [
+      { name: 'Mango', info: 'Fruit harvest yields ₹2,500 annual income starting from year 5.', factor: 15, rate5Yr: 2500, rate10Yr: 6000 },
+      { name: 'Coconut', info: 'Copra/oil extraction yields ₹3,000 annual income starting from year 5.', factor: 16, rate5Yr: 3000, rate10Yr: 7500 }
+    ]
+  };
+
+  // Adjust selected tree variety if category changes
+  useEffect(() => {
+    if (treeDatabase[category]) {
+      setTreeType(treeDatabase[category][0].name);
+    }
+  }, [category]);
 
   const handleSimulate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,8 +65,9 @@ export default function TreePage() {
       }
     } catch (err) {
       console.error("Simulation connection failed. Calculating locally.");
-      const factor = treeType === 'Teak' ? 20.0 : treeType === 'Mangrove' ? 25.0 : 18.0;
-      const annual = treeCount * factor;
+      const currentList = treeDatabase[category] || [];
+      const treeObj = currentList.find(t => t.name === treeType) || { factor: 20 };
+      const annual = treeCount * treeObj.factor;
       const total = (annual * days) / 365.0;
       setResult({
         annual_co2_absorption_kg: annual,
@@ -55,28 +80,32 @@ export default function TreePage() {
     }
   };
 
-  const calculateEcoCoinsReward = () => {
-    const timeMultiplier = targetTimeframe === 'Day' ? 12 : targetTimeframe === 'Week' ? 6 : targetTimeframe === 'Month' ? 3 : 1;
-    const treeMultiplier = treeType === 'Teak' ? 1.4 : treeType === 'Mangrove' ? 1.5 : 1.0;
-    return Math.round(targetCount * timeMultiplier * treeMultiplier);
+  const getActiveTreeDetails = () => {
+    const currentList = treeDatabase[category] || [];
+    return currentList.find(t => t.name === treeType) || currentList[0] || { name: '', info: '', factor: 20, rate5Yr: 0, rate10Yr: 0 };
   };
 
-  // Teak wood yield projection calculation (Rs. 10000 per wood log after 6 to 7 years)
-  // Yield matures significantly after 5 or 10 years
+  // Calculate yield value in INR based on duration
   const getTeakWoodYield = () => {
     const years = days / 365.0;
-    let ratePerWood = 0;
+    const details = getActiveTreeDetails();
+    let ratePerTree = 0;
     if (years >= 10) {
-      ratePerWood = 18000; // Rs. 18,000 per log after 10 years
+      ratePerTree = details.rate10Yr;
     } else if (years >= 5) {
-      ratePerWood = 10000; // Rs. 10,000 per log after 5 to 7 years
+      ratePerTree = details.rate5Yr;
     } else {
-      ratePerWood = Math.max(1000, Math.round(years * 1800)); // lower rate for younger logs
+      ratePerTree = Math.max(100, Math.round(years * (details.rate5Yr / 5.0)));
     }
-    return treeCount * ratePerWood;
+    return treeCount * ratePerTree;
   };
 
-  const scale = Math.min(2.5, 0.5 + (days * 0.005) + (treeCount * 0.005));
+  const calculateEcoCoinsReward = () => {
+    const timeMultiplier = targetTimeframe === 'Day' ? 12 : targetTimeframe === 'Week' ? 6 : targetTimeframe === 'Month' ? 3 : 1;
+    return Math.round(targetCount * timeMultiplier * 1.5);
+  };
+
+  const scale = Math.min(2.5, 0.5 + (days * 0.0005) + (treeCount * 0.0005));
 
   return (
     <div className="space-y-6">
@@ -117,23 +146,44 @@ export default function TreePage() {
               <input
                 type="range"
                 min="5" 
-                max="3650" // Slide up to 10 years (3650 days) to see long term timber output!
+                max="5475" // Slider scale up to 15 years (5475 days)
                 value={days}
                 onChange={(e) => setDays(parseInt(e.target.value))}
                 className="eco-slider"
               />
             </div>
 
+            {/* Category Selector */}
             <div>
-              <label className="block text-gray-400 font-semibold mb-1.5">Tree Species</label>
+              <label className="block text-gray-400 font-semibold mb-1.5 flex items-center gap-1">
+                <Tag className="h-3.5 w-3.5 text-emerald-400" /> Tree Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full p-2.5 bg-black/40 border border-emerald-500/10 rounded-xl text-white focus:outline-none focus:border-emerald-500 text-xs"
+              >
+                <option value="Timber" className="bg-[#091612] text-white">Timber / Commercial Wood</option>
+                <option value="Carbon" className="bg-[#091612] text-white">Carbon Capture Offsets</option>
+                <option value="Agriculture" className="bg-[#091612] text-white">Agriculture / Fruits</option>
+              </select>
+            </div>
+
+            {/* Variety Selector */}
+            <div>
+              <label className="block text-gray-400 font-semibold mb-1.5 flex items-center gap-1">
+                <Layers className="h-3.5 w-3.5 text-emerald-400" /> Tree Variety
+              </label>
               <select
                 value={treeType}
                 onChange={(e) => setTreeType(e.target.value)}
                 className="w-full p-2.5 bg-black/40 border border-emerald-500/10 rounded-xl text-white focus:outline-none focus:border-emerald-500 text-xs"
               >
-                <option value="Teak" className="bg-[#091612] text-white">Teak Wood (High Timber Value - Rs.10,000/log)</option>
-                <option value="Mangrove" className="bg-[#091612] text-white">Mangrove (High Carbon Capture - 25kg/yr)</option>
-                <option value="Oak" className="bg-[#091612] text-white">Oak (Moderate Absorption - 22kg/yr)</option>
+                {(treeDatabase[category] || []).map((t) => (
+                  <option key={t.name} value={t.name} className="bg-[#091612] text-white">
+                    {t.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -193,19 +243,17 @@ export default function TreePage() {
           </div>
 
           {/* Timber Commercial Output Box */}
-          {treeType === 'Teak' && (
-            <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl space-y-2">
-              <h4 className="font-bold text-amber-400 flex items-center gap-1.5">
-                💼 Teak Wood Plantation Timber Yield Output
-              </h4>
-              <p className="text-gray-300 leading-normal">
-                Based on current market valuations, 1 mature Teak tree yields logs worth approx <strong>₹10,000 per log after 6 to 7 years</strong>, rising to <strong>₹18,000 per log after 10 years</strong>.
-              </p>
-              <div className="text-sm font-black text-white mt-1">
-                Estimated Commercial Value for {treeCount} Trees: <span className="text-amber-400">₹{getTeakWoodYield().toLocaleString()}</span>
-              </div>
+          <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl space-y-2">
+            <h4 className="font-bold text-amber-400 flex items-center gap-1.5">
+              💼 Commercial Yield & Profit Projections (Future Returns)
+            </h4>
+            <p className="text-gray-300 leading-normal">
+              {getActiveTreeDetails().info}
+            </p>
+            <div className="text-sm font-black text-white mt-1">
+              Estimated Future Value for {treeCount} {treeType} Trees: <span className="text-amber-400">₹{getTeakWoodYield().toLocaleString()}</span>
             </div>
-          )}
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             {/* SVG Tree Animation Card */}
