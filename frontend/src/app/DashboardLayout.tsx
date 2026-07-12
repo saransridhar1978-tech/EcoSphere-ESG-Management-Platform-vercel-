@@ -36,12 +36,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [chatLoading, setChatLoading] = useState(false);
 
   React.useEffect(() => {
-    if (!user && pathname !== '/login' && pathname !== '/signup') {
+    if (!user && pathname !== '/login' && pathname !== '/signup' && pathname !== '/admin/login') {
       router.push('/login');
+    } else if (user && user.role !== 'Admin' && pathname.startsWith('/admin')) {
+      router.push('/'); // Redirect normal users to home
     }
   }, [user, pathname, router]);
 
-  if (!user && (pathname === '/login' || pathname === '/signup')) {
+  if (!user && (pathname === '/login' || pathname === '/signup' || pathname === '/admin/login')) {
     return <>{children}</>;
   }
 
