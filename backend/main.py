@@ -74,6 +74,7 @@ class TreeInput(BaseModel):
 
 class CoachInput(BaseModel):
     message: str
+    path: Optional[str] = ""
 
 class CampusInput(BaseModel):
     students: int
@@ -274,8 +275,41 @@ def renewable_predict(data: RenewableInput, db: Session = Depends(get_db)):
 @app.post("/green-coach")
 def green_coach(data: CoachInput):
     msg_lower = data.message.lower()
+    path = data.path or ""
     
-    if "hello" in msg_lower or "hi" in msg_lower or "hey" in msg_lower:
+    # Contextual routing based on the active webpage
+    if "tree" in path.lower() or "plant" in path.lower():
+        if "teak" in msg_lower or "price" in msg_lower or "profit" in msg_lower or "yield" in msg_lower or "sandalwood" in msg_lower or "mahogany" in msg_lower or "rosewood" in msg_lower:
+            reply = ("On this Tree Plantation page, we calculate actual and predicted prices:\n"
+                     "- Sandalwood yields a massive ₹75,000 (5 yrs) to ₹1,50,000 (10 yrs) with actual market rates at ₹12,000/kg.\n"
+                     "- Teak Wood logs are worth ₹10,000 at 5 yrs, predicted to rise to ₹18,000 at 10 yrs.\n"
+                     "- Agriculture crop trees like Mango & Coconut yield annual fruits profit of ₹2,500 – ₹7,500.")
+        else:
+            reply = ("You are currently viewing the Tree Plantation Simulator.\n"
+                     "You can adjust the sliders for Tree Count and Duration (up to 15 years/5475 days) for species like Teak wood, Mango, Rosewood, and Sandalwood to calculate carbon offsets and timber commercial profits.")
+    elif "renewable" in path.lower():
+        reply = ("You are currently viewing the Renewable Energy Predictor page.\n"
+                 "This allows side-by-side modeling of:\n"
+                 "- Solar capacity & active duration hours.\n"
+                 "- Wind speed turbines capacity.\n"
+                 "- Water Hydroelectric flow rate (m³/s) & head height.\n"
+                 "- Biogas digester waste feedstock (kg/day).\n"
+                 "Adjust variables to compute daily and annual energy in kWh.")
+    elif "greenwash" in path.lower():
+        reply = ("You are currently viewing the Greenwashing Detector & Plan Consultant.\n"
+                 "Input marketing statements to detect greenwash probability, get recommended corrections to your plan, and construct a brand-new sustainability plan in Rupees (₹) customized to your target budget.")
+    elif "ecogini" in path.lower() or "score" in path.lower():
+        reply = ("You are currently viewing the Eco-Gini AI Scorecard page.\n"
+                 "This page calculates audited ESG rating scores based on Tamil Nadu grids. It integrates a live Google Map view of your site and recommends compliance roadmap targets based on your custom command directive text.")
+    elif "carbon" in path.lower() or "allocation" in path.lower():
+        reply = ("You are currently viewing the Daily Work Allocation page.\n"
+                 "Use this dashboard to allocate energy-saving tasks to workers, such as switching off water motors, maintaining the grassland lawn, or turning off electronic products on time.")
+    elif "gamification" in path.lower() or "challenge" in path.lower() or "leaderboard" in path.lower():
+        reply = ("You are currently viewing the Eco Gamification Hub.\n"
+                 "Complete weekly challenges (e.g. Tree plantation, Lake cleanup, Biogas waste feedstock) with GPS geotagged photo proof to earn Eco Coins for social marketing platforms.")
+    
+    # Fallback to keyword matching if no path matched or path query is specific
+    elif "hello" in msg_lower or "hi" in msg_lower or "hey" in msg_lower:
         reply = "Hello! I am your EcoSphere AI Assistant. How can I help you optimize your carbon footprint, audit renewable energy, calculate timber yields, or allocate daily work tasks today?"
     elif "carbon" in msg_lower or "reduce emissions" in msg_lower:
         reply = ("To reduce carbon emissions at your corporate campus:\n"

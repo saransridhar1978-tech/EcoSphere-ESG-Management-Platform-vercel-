@@ -87,7 +87,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       const response = await fetch('http://localhost:8000/green-coach', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify({ message: text, path: pathname })
       });
       if (response.ok) {
         const data = await response.json();
