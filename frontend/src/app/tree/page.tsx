@@ -1,39 +1,53 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../AppContext';
-import { Trees, ShieldAlert, Sparkles, Clock, Target, Gift, DollarSign, Tag, Layers } from 'lucide-react';
+import { Trees, ShieldAlert, Sparkles, Clock, Target, Gift, DollarSign, Tag, Layers, TrendingUp } from 'lucide-react';
 
 export default function TreePage() {
   const { user } = useApp();
-  const [treeCount, setTreeCount] = useState(5); 
+  const [treeCount, setTreeCount] = useState(10); 
   const [category, setCategory] = useState('Timber'); // Tree Category
   const [treeType, setTreeType] = useState('Teak'); // Tree Variety
-  const [days, setDays] = useState(5); 
+  const [days, setDays] = useState(1825); // Default to 5 Years (1825 days)
   
   const [targetTimeframe, setTargetTimeframe] = useState('Week'); 
   const [targetCount, setTargetCount] = useState(50);
   
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>({
-    annual_co2_absorption_kg: 100,
-    total_co2_absorption_kg: 500,
-    environmental_impact_rating: 12,
-    equivalent_car_miles_saved: 1200
+    annual_co2_absorption_kg: 200,
+    total_co2_absorption_kg: 1000,
+    environmental_impact_rating: 35,
+    equivalent_car_miles_saved: 2400
   });
 
-  // Tree category & variety mapping
-  const treeDatabase: Record<string, { name: string; info: string; factor: number; rate5Yr: number; rate10Yr: number }[]> = {
+  // Expanded Tree category, variety, current market price and future predicted prices mapping
+  const treeDatabase: Record<string, { 
+    name: string; 
+    info: string; 
+    factor: number; // carbon absorption factor
+    currentMarketPrice: string; // actual market price description
+    baseCurrentVal: number; // base value in rupees today per tree
+    predicted5YrVal: number; // predicted value after 5 years per tree
+    predicted10YrVal: number; // predicted value after 10 years per tree
+    isAnnualAgri: boolean; // if returns are annual harvests instead of single-cut timber
+  }[]> = {
     Timber: [
-      { name: 'Teak', info: 'Premium wood log value of ₹10,000 (5-7 yrs) and ₹18,000 (10 yrs).', factor: 20, rate5Yr: 10000, rate10Yr: 18000 },
-      { name: 'Mahogany', info: 'Durable reddish timber yielding ₹8,000 (5-7 yrs) and ₹15,000 (10 yrs).', factor: 18, rate5Yr: 8000, rate10Yr: 15000 }
-    ],
-    Carbon: [
-      { name: 'Mangrove', info: 'High carbon capture (25kg/yr). Yields ₹1,500 carbon credit value.', factor: 25, rate5Yr: 1500, rate10Yr: 3200 },
-      { name: 'Bamboo', info: 'Ultra fast growth. Yields ₹900 cellulose/offset credits.', factor: 22, rate5Yr: 900, rate10Yr: 2000 }
+      { name: 'Teak', info: 'Premium high-density hard wood log. Highly demanded for luxury furniture.', factor: 20, currentMarketPrice: '₹2,500 per cubic feet', baseCurrentVal: 4000, predicted5YrVal: 10000, predicted10YrVal: 18000, isAnnualAgri: false },
+      { name: 'Mahogany', info: 'Durable reddish-brown commercial timber, popular in global markets.', factor: 18, currentMarketPrice: '₹1,800 per cubic feet', baseCurrentVal: 3000, predicted5YrVal: 8000, predicted10YrVal: 15000, isAnnualAgri: false },
+      { name: 'Sandalwood', info: 'Highly valued aromatic heartwood used in cosmetics and pharmaceuticals.', factor: 14, currentMarketPrice: '₹12,000 per kg', baseCurrentVal: 25000, predicted5YrVal: 75000, predicted10YrVal: 150000, isAnnualAgri: false },
+      { name: 'Rosewood', info: 'Heavy, dark timber with elegant grain used for musical instruments.', factor: 17, currentMarketPrice: '₹3,500 per cubic feet', baseCurrentVal: 6000, predicted5YrVal: 18000, predicted10YrVal: 35000, isAnnualAgri: false }
     ],
     Agriculture: [
-      { name: 'Mango', info: 'Fruit harvest yields ₹2,500 annual income starting from year 5.', factor: 15, rate5Yr: 2500, rate10Yr: 6000 },
-      { name: 'Coconut', info: 'Copra/oil extraction yields ₹3,000 annual income starting from year 5.', factor: 16, rate5Yr: 3000, rate10Yr: 7500 }
+      { name: 'Mango (Alphonso)', info: 'Vibrant export fruit yield. Harvest cycles begin from Year 4-5.', factor: 15, currentMarketPrice: '₹150 per kg (Fruit harvest)', baseCurrentVal: 1200, predicted5YrVal: 2500, predicted10YrVal: 6000, isAnnualAgri: true },
+      { name: 'Coconut (Tall)', info: 'Continuous crop yield of copra, oil, and coconut coir fibers.', factor: 16, currentMarketPrice: '₹40 per nut', baseCurrentVal: 1000, predicted5YrVal: 3000, predicted10YrVal: 7500, isAnnualAgri: true },
+      { name: 'Jackfruit', info: 'Heavy yielding fibrous fruit, logs hold high timber value at end-of-life.', factor: 19, currentMarketPrice: '₹80 per kg (Fruit)', baseCurrentVal: 800, predicted5YrVal: 2800, predicted10YrVal: 5500, isAnnualAgri: true },
+      { name: 'Amla (Gooseberry)', info: 'Rich vitamin C medicinal fruit harvest. Hard-wearing wild crops.', factor: 12, currentMarketPrice: '₹120 per kg', baseCurrentVal: 600, predicted5YrVal: 2000, predicted10YrVal: 4200, isAnnualAgri: true }
+    ],
+    Medicinal_Bio: [
+      { name: 'Neem', info: 'Natural pest controller and high grade organic leaf extract seller.', factor: 22, currentMarketPrice: '₹200 per kg (Seeds/Oil)', baseCurrentVal: 500, predicted5YrVal: 1500, predicted10YrVal: 3500, isAnnualAgri: true },
+      { name: 'Moringa (Drumstick)', info: 'Superfood foliage and drumstick pods. Fast cash crop cycles.', factor: 24, currentMarketPrice: '₹60 per kg', baseCurrentVal: 400, predicted5YrVal: 1800, predicted10YrVal: 3000, isAnnualAgri: true },
+      { name: 'Eucalyptus', info: 'Fast growing pulp wood logs, used extensively in paper mills.', factor: 21, currentMarketPrice: '₹9,000 per ton (Pulp)', baseCurrentVal: 1100, predicted5YrVal: 3500, predicted10YrVal: 6000, isAnnualAgri: false }
     ]
   };
 
@@ -82,7 +96,22 @@ export default function TreePage() {
 
   const getActiveTreeDetails = () => {
     const currentList = treeDatabase[category] || [];
-    return currentList.find(t => t.name === treeType) || currentList[0] || { name: '', info: '', factor: 20, rate5Yr: 0, rate10Yr: 0 };
+    return currentList.find(t => t.name === treeType) || currentList[0];
+  };
+
+  // Calculate predicted future price value per tree
+  const getPredictedPerTreePrice = () => {
+    const years = days / 365.0;
+    const details = getActiveTreeDetails();
+    if (years >= 10) {
+      return details.predicted10YrVal;
+    } else if (years >= 5) {
+      return details.predicted5YrVal;
+    } else {
+      // Linear interpolation between base current value and 5 year value
+      const slope = (details.predicted5YrVal - details.baseCurrentVal) / 5.0;
+      return Math.round(details.baseCurrentVal + (years * slope));
+    }
   };
 
   // Calculate yield value in INR based on duration
@@ -91,11 +120,11 @@ export default function TreePage() {
     const details = getActiveTreeDetails();
     let ratePerTree = 0;
     if (years >= 10) {
-      ratePerTree = details.rate10Yr;
+      ratePerTree = details.predicted10YrVal;
     } else if (years >= 5) {
-      ratePerTree = details.rate5Yr;
+      ratePerTree = details.predicted5YrVal;
     } else {
-      ratePerTree = Math.max(100, Math.round(years * (details.rate5Yr / 5.0)));
+      ratePerTree = Math.max(100, Math.round(years * (details.predicted5YrVal / 5.0)));
     }
     return treeCount * ratePerTree;
   };
@@ -113,7 +142,7 @@ export default function TreePage() {
         <h1 className="text-2xl font-extrabold text-white flex items-center gap-2">
           <Trees className="h-6 w-6 text-emerald-400" /> Tree Plantation Impact Simulator
         </h1>
-        <p className="text-xs text-gray-400 mt-1">Simulate tree plantation projects to model ecological benefits and timber commercial value.</p>
+        <p className="text-xs text-gray-400 mt-1">Simulate tree plantation projects to model ecological benefits and timber/agri commercial values.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs">
@@ -146,7 +175,7 @@ export default function TreePage() {
               <input
                 type="range"
                 min="5" 
-                max="5475" // Slider scale up to 15 years (5475 days)
+                max="5475" // Slider scale up to 15 years
                 value={days}
                 onChange={(e) => setDays(parseInt(e.target.value))}
                 className="eco-slider"
@@ -164,8 +193,8 @@ export default function TreePage() {
                 className="w-full p-2.5 bg-black/40 border border-emerald-500/10 rounded-xl text-white focus:outline-none focus:border-emerald-500 text-xs"
               >
                 <option value="Timber" className="bg-[#091612] text-white">Timber / Commercial Wood</option>
-                <option value="Carbon" className="bg-[#091612] text-white">Carbon Capture Offsets</option>
                 <option value="Agriculture" className="bg-[#091612] text-white">Agriculture / Fruits</option>
+                <option value="Medicinal_Bio" className="bg-[#091612] text-white">Medicinal / Bio-Offsets</option>
               </select>
             </div>
 
@@ -199,6 +228,42 @@ export default function TreePage() {
 
         {/* Projections & Target Recommendations Card */}
         <div className="glass-card lg:col-span-2 flex flex-col gap-6">
+          
+          {/* Detailed Market Pricing Projections Panel */}
+          <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl space-y-4">
+            <h4 className="font-bold text-amber-400 flex items-center gap-1.5 border-b border-amber-500/10 pb-2">
+              <TrendingUp className="h-4.5 w-4.5" /> Market Price Yields & Future Forecast (INR)
+            </h4>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-3 bg-black/30 rounded-xl border border-amber-500/10">
+                <span className="text-gray-400 block text-[10px] uppercase font-bold tracking-wider">Actual Current Market Rate</span>
+                <span className="text-white font-bold block mt-1">{getActiveTreeDetails().currentMarketPrice}</span>
+                <span className="text-gray-400 text-[10px] mt-2 block">
+                  Est. base value today: <strong>₹{getActiveTreeDetails().baseCurrentVal.toLocaleString()} / tree</strong>
+                </span>
+                <span className="text-amber-400 font-bold block mt-1 text-sm">
+                  Total Current Asset Value: ₹{(treeCount * getActiveTreeDetails().baseCurrentVal).toLocaleString()}
+                </span>
+              </div>
+
+              <div className="p-3 bg-black/30 rounded-xl border border-amber-500/10">
+                <span className="text-gray-400 block text-[10px] uppercase font-bold tracking-wider">Predicted Future Value ({Math.round(days/365.0)} Years)</span>
+                <span className="text-white font-bold block mt-1">₹{getPredictedPerTreePrice().toLocaleString()} / tree</span>
+                <span className="text-emerald-400 font-bold block mt-2 text-sm">
+                  Total Future Predicted Value: ₹{(treeCount * getPredictedPerTreePrice()).toLocaleString()}
+                </span>
+                <span className="text-gray-400 text-[9px] block mt-1">
+                  Net Predicted Gain: +₹{((getPredictedPerTreePrice() - getActiveTreeDetails().baseCurrentVal) * treeCount).toLocaleString()}
+                </span>
+              </div>
+            </div>
+            
+            <p className="text-gray-300 text-[10px] leading-relaxed">
+              <strong>Info:</strong> {getActiveTreeDetails().info} {getActiveTreeDetails().isAnnualAgri ? "These agricultural assets provide periodic harvesting revenues beginning from year 4." : "These timber assets represent final harvest commercial payouts."}
+            </p>
+          </div>
+
           {/* Target Planning & Recommendation */}
           <div className="bg-emerald-950/20 p-4 rounded-xl border border-emerald-500/20 space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
@@ -239,19 +304,6 @@ export default function TreePage() {
                   If you plant <strong className="text-white">{targetCount}</strong> trees of type <strong className="text-white">{treeType}</strong> in a <strong className="text-white">{targetTimeframe.toLowerCase()}</strong>, you will earn <strong className="text-amber-400 font-bold">{calculateEcoCoinsReward()} Eco Coins</strong> and increase your carbon capture target threshold!
                 </p>
               </div>
-            </div>
-          </div>
-
-          {/* Timber Commercial Output Box */}
-          <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl space-y-2">
-            <h4 className="font-bold text-amber-400 flex items-center gap-1.5">
-              💼 Commercial Yield & Profit Projections (Future Returns)
-            </h4>
-            <p className="text-gray-300 leading-normal">
-              {getActiveTreeDetails().info}
-            </p>
-            <div className="text-sm font-black text-white mt-1">
-              Estimated Future Value for {treeCount} {treeType} Trees: <span className="text-amber-400">₹{getTeakWoodYield().toLocaleString()}</span>
             </div>
           </div>
 
