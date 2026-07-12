@@ -23,7 +23,7 @@ export default function GreenwashingPage() {
       "Provide concrete statistics (e.g., exact carbon tonnage offsets instead of saying 'carbon-neutral')."
     ],
     better_plan: "Better Plan Suggestion: Replace vague claims with: 'Our facility reduced energy footprint by 12% in Q1 verified under ISO 14001 certification.'",
-    new_plan: "New Solar Plan (Budget: $5,000.00): Install a 4.2 kW solar panel grid on the warehouse roof. Expected annual offset: 4000 kg CO2. ROI: 4.2 Years."
+    new_plan: "New Solar Plan (Budget: ₹5,000.00): Install a 4.2 kW solar panel grid on the warehouse roof. Expected annual offset: 4000 kg CO2. ROI: 4.2 Years."
   });
 
   const handleDetect = async (e: React.FormEvent) => {
@@ -61,7 +61,7 @@ export default function GreenwashingPage() {
           "Provide concrete statistics."
         ],
         better_plan: `Better Plan Suggestion: Replace vague claims with: 'Our facility in Tamil Nadu offsets 2,500 kg CO2e annually verified by external green audit.'`,
-        new_plan: `New ${topic} Plan (Budget: $${budget.toLocaleString()}): Install custom ${topic.toLowerCase()} offsets. Expected annual offset: ${budget * 0.8} kg CO2. ROI: 5.5 Years.`
+        new_plan: `New ${topic} Plan (Budget: ₹${budget.toLocaleString()}): Install custom ${topic.toLowerCase()} offsets. Expected annual offset: ${budget * 0.08} kg CO2. ROI: 5.5 Years.`
       });
     } finally {
       setLoading(false);
@@ -114,7 +114,7 @@ export default function GreenwashingPage() {
             </div>
 
             <div>
-              <label className="block text-gray-400 font-semibold mb-1">Target Plan Cost / Budget ($)</label>
+              <label className="block text-gray-400 font-semibold mb-1">Target Plan Cost / Budget (₹ / INR)</label>
               <input
                 type="number"
                 value={cost}

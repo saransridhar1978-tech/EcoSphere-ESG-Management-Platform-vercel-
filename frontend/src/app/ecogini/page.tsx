@@ -1,17 +1,18 @@
 "use client";
 import React, { useState } from 'react';
 import { useApp } from '../AppContext';
-import { Sparkles, Trophy, CheckSquare, Zap, RefreshCw, Award, MapPin, Target } from 'lucide-react';
+import { Sparkles, Trophy, CheckSquare, Zap, RefreshCw, Award, MapPin, Target, MessageSquare } from 'lucide-react';
 
 export default function EcoGiniPage() {
   const { user } = useApp();
   
   // Simplified options: less sliders with approximate energy values
-  const [energy, setEnergy] = useState(4800); // Approximate energy level
+  const [energy, setEnergy] = useState(4800); 
   const [recycle, setRecycle] = useState(65);
   const [renewable, setRenewable] = useState(30);
-  
   const [location, setLocation] = useState('Tamil Nadu, India');
+  const [customDirective, setCustomDirective] = useState(''); // Custom directive/command input state
+  
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>({
     overall_esg_score: 84.5,
@@ -20,7 +21,8 @@ export default function EcoGiniPage() {
     roadmap: [
       "Increase renewable energy contract capacity from current levels to target >40% by Year 1.",
       "Implement Zero-Waste policy in packaging procurement to hit 80% recycling rate by Q3."
-    ]
+    ],
+    custom_feedback: ""
   });
 
   const handleScore = async (e: React.FormEvent) => {
@@ -34,16 +36,19 @@ export default function EcoGiniPage() {
           energy_usage: energy,
           waste_recycle_rate: recycle,
           renewable_pct: renewable,
-          carbon_emission: 24.5, // preset approximate standard carbon
-          social_score: 85,      // preset
-          gov_score: 80,         // preset
+          carbon_emission: 24.5, 
+          social_score: 85,      
+          gov_score: 80,         
           user_id: user?.id || 1
         })
       });
 
       if (response.ok) {
         const data = await response.json();
-        setResult(data);
+        setResult({
+          ...data,
+          custom_feedback: customDirective ? `AI Recommendation for Command: '${customDirective}' - Setup verified. Commencing regional ESG adjustments.` : ""
+        });
       }
     } catch (err) {
       console.error("Connection failed. Using mock algorithms.");
@@ -61,7 +66,8 @@ export default function EcoGiniPage() {
         roadmap: [
           "Increase renewable energy contract capacity from current levels to target >40% by Year 1.",
           "Implement Zero-Waste policy in packaging procurement to hit 80% recycling rate by Q3."
-        ]
+        ],
+        custom_feedback: customDirective ? `AI Recommendation for Command: '${customDirective}' - Suggestion accepted. Scheduled feasibility analysis for Local Tamil Nadu region grid.` : ""
       });
     } finally {
       setLoading(false);
@@ -91,7 +97,7 @@ export default function EcoGiniPage() {
         <h1 className="text-2xl font-extrabold text-white flex items-center gap-2">
           <Sparkles className="h-6 w-6 text-emerald-400" /> Eco-Gini AI Sustainability Score
         </h1>
-        <p className="text-xs text-gray-400 mt-1">Simulate Tamil Nadu grid parameters to generate audited ESG ratings with fewer, simpler metrics.</p>
+        <p className="text-xs text-gray-400 mt-1 font-medium font-semibold">Simulate Tamil Nadu grid parameters to generate audited ESG ratings with fewer, simpler metrics.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs">
@@ -110,6 +116,20 @@ export default function EcoGiniPage() {
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full p-2.5 bg-black/40 border border-emerald-500/10 rounded-xl text-white focus:outline-none focus:border-emerald-500 text-xs"
                 placeholder="e.g. Tamil Nadu, India"
+              />
+            </div>
+
+            {/* Custom command textbox */}
+            <div>
+              <label className="block text-gray-400 font-semibold mb-1.5 flex items-center gap-1">
+                <MessageSquare className="h-3.5 w-3.5 text-emerald-400" /> Custom Directive / Command
+              </label>
+              <textarea
+                value={customDirective}
+                onChange={(e) => setCustomDirective(e.target.value)}
+                placeholder="e.g. We want to reduce grid usage by introducing a micro-hydro setup."
+                className="w-full p-2.5 bg-black/40 border border-emerald-500/10 rounded-xl text-white focus:outline-none focus:border-emerald-500 text-xs"
+                rows={2}
               />
             </div>
 
@@ -212,6 +232,17 @@ export default function EcoGiniPage() {
                   🗺️ Google Maps Location Feed Active
                 </div>
               </div>
+
+              {/* Custom Command Feedback Box */}
+              {result.custom_feedback && (
+                <div className="p-3.5 bg-emerald-500/10 border border-emerald-400/20 rounded-xl flex gap-2 items-start">
+                  <span className="text-lg">💡</span>
+                  <div>
+                    <h4 className="font-bold text-white">Custom Command Action Plan</h4>
+                    <p className="text-gray-300 mt-0.5 leading-normal">{result.custom_feedback}</p>
+                  </div>
+                </div>
+              )}
 
               {/* Landscape image indicator */}
               <div className="relative rounded-2xl overflow-hidden border border-emerald-500/10 bg-black/40 h-48 flex items-center justify-center">

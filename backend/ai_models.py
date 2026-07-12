@@ -99,15 +99,15 @@ class GreenwashingDetectorAI:
         new_plan = ""
         if topic and cost > 0:
             if "solar" in topic.lower():
-                new_plan = f"New Solar Plan (Budget: ${cost:,.2f}): Install a {min(50.0, cost / 1200.0):.1f} kW solar panel grid on the warehouse roof. Expected annual offset: {cost * 0.8:.0f} kg CO2. ROI: 4.2 Years."
+                new_plan = f"New Solar Plan (Budget: ₹{cost:,.2f}): Install a {min(50.0, cost / 95000.0):.1f} kW solar panel grid on the warehouse roof. Expected annual offset: {cost * 0.008:.0f} kg CO2. ROI: 4.2 Years."
             elif "wind" in topic.lower():
-                new_plan = f"New Wind Plan (Budget: ${cost:,.2f}): Install a small-scale {min(20.0, cost / 2500.0):.1f} kW wind turbine generator. Expected annual offset: {cost * 0.6:.0f} kg CO2. ROI: 6.5 Years."
+                new_plan = f"New Wind Plan (Budget: ₹{cost:,.2f}): Install a small-scale {min(20.0, cost / 180000.0):.1f} kW wind turbine generator. Expected annual offset: {cost * 0.006:.0f} kg CO2. ROI: 6.5 Years."
             elif "water" in topic.lower() or "hydro" in topic.lower():
-                new_plan = f"New Hydro Plan (Budget: ${cost:,.2f}): Install a micro-hydro turbine for local stream flow. Expected annual offset: {cost * 0.95:.0f} kg CO2. ROI: 3.5 Years."
+                new_plan = f"New Hydro Plan (Budget: ₹{cost:,.2f}): Install a micro-hydro turbine for local stream flow. Expected annual offset: {cost * 0.0095:.0f} kg CO2. ROI: 3.5 Years."
             elif "biogas" in topic.lower() or "waste" in topic.lower():
-                new_plan = f"New Biogas Plan (Budget: ${cost:,.2f}): Implement a farm-scale anaerobic organic waste digester. Expected annual offset: {cost * 0.7:.0f} kg CO2. ROI: 5.0 Years."
+                new_plan = f"New Biogas Plan (Budget: ₹{cost:,.2f}): Implement a farm-scale anaerobic organic waste digester. Expected annual offset: {cost * 0.007:.0f} kg CO2. ROI: 5.0 Years."
             else:
-                new_plan = f"New Sustainability Plan (Budget: ${cost:,.2f}): Upgrade lighting to smart LED sensors and implement local recycling bins. Expected annual offset: {cost * 0.5:.0f} kg CO2."
+                new_plan = f"New Sustainability Plan (Budget: ₹{cost:,.2f}): Upgrade lighting to smart LED sensors and implement local recycling bins. Expected annual offset: {cost * 0.005:.0f} kg CO2."
 
         return {
             "greenwashing_probability": round(probability, 1),

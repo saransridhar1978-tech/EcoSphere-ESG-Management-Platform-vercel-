@@ -1,23 +1,23 @@
 "use client";
 import React, { useState } from 'react';
 import { useApp } from '../AppContext';
-import { Trees, ShieldAlert, Sparkles, Clock, Target, Gift } from 'lucide-react';
+import { Trees, ShieldAlert, Sparkles, Clock, Target, Gift, DollarSign } from 'lucide-react';
 
 export default function TreePage() {
   const { user } = useApp();
-  const [treeCount, setTreeCount] = useState(5); // Start tree count from 5
-  const [treeType, setTreeType] = useState('Mangrove');
-  const [days, setDays] = useState(5); // Start duration from 5 days
+  const [treeCount, setTreeCount] = useState(5); 
+  const [treeType, setTreeType] = useState('Teak'); // Default to Teak tree
+  const [days, setDays] = useState(5); 
   
   const [targetTimeframe, setTargetTimeframe] = useState('Week'); 
   const [targetCount, setTargetCount] = useState(50);
   
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>({
-    annual_co2_absorption_kg: 125,
-    total_co2_absorption_kg: 625,
-    environmental_impact_rating: 15,
-    equivalent_car_miles_saved: 1500
+    annual_co2_absorption_kg: 100,
+    total_co2_absorption_kg: 500,
+    environmental_impact_rating: 12,
+    equivalent_car_miles_saved: 1200
   });
 
   const handleSimulate = async (e: React.FormEvent) => {
@@ -30,7 +30,7 @@ export default function TreePage() {
         body: JSON.stringify({
           tree_count: treeCount,
           tree_type: treeType,
-          years: Math.max(1, Math.round(days / 365.0)), // convert days to years for backend format
+          years: Math.max(1, Math.round(days / 365.0)), 
           user_id: user?.id || 1
         })
       });
@@ -41,7 +41,7 @@ export default function TreePage() {
       }
     } catch (err) {
       console.error("Simulation connection failed. Calculating locally.");
-      const factor = treeType === 'Mangrove' ? 25.0 : treeType === 'Oak' ? 22.0 : 18.0;
+      const factor = treeType === 'Teak' ? 20.0 : treeType === 'Mangrove' ? 25.0 : 18.0;
       const annual = treeCount * factor;
       const total = (annual * days) / 365.0;
       setResult({
@@ -57,8 +57,23 @@ export default function TreePage() {
 
   const calculateEcoCoinsReward = () => {
     const timeMultiplier = targetTimeframe === 'Day' ? 12 : targetTimeframe === 'Week' ? 6 : targetTimeframe === 'Month' ? 3 : 1;
-    const treeMultiplier = treeType === 'Mangrove' ? 1.5 : treeType === 'Oak' ? 1.2 : 1.0;
+    const treeMultiplier = treeType === 'Teak' ? 1.4 : treeType === 'Mangrove' ? 1.5 : 1.0;
     return Math.round(targetCount * timeMultiplier * treeMultiplier);
+  };
+
+  // Teak wood yield projection calculation (Rs. 10000 per wood log after 6 to 7 years)
+  // Yield matures significantly after 5 or 10 years
+  const getTeakWoodYield = () => {
+    const years = days / 365.0;
+    let ratePerWood = 0;
+    if (years >= 10) {
+      ratePerWood = 18000; // Rs. 18,000 per log after 10 years
+    } else if (years >= 5) {
+      ratePerWood = 10000; // Rs. 10,000 per log after 5 to 7 years
+    } else {
+      ratePerWood = Math.max(1000, Math.round(years * 1800)); // lower rate for younger logs
+    }
+    return treeCount * ratePerWood;
   };
 
   const scale = Math.min(2.5, 0.5 + (days * 0.005) + (treeCount * 0.005));
@@ -69,7 +84,7 @@ export default function TreePage() {
         <h1 className="text-2xl font-extrabold text-white flex items-center gap-2">
           <Trees className="h-6 w-6 text-emerald-400" /> Tree Plantation Impact Simulator
         </h1>
-        <p className="text-xs text-gray-400 mt-1 font-medium">Simulate tree plantation projects starting from 5 trees and 5 days duration modeling clean metrics.</p>
+        <p className="text-xs text-gray-400 mt-1">Simulate tree plantation projects to model ecological benefits and timber commercial value.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs">
@@ -84,7 +99,7 @@ export default function TreePage() {
               </div>
               <input
                 type="range"
-                min="5" // Start trees level from 5
+                min="5" 
                 max="1000"
                 value={treeCount}
                 onChange={(e) => setTreeCount(parseInt(e.target.value))}
@@ -94,13 +109,15 @@ export default function TreePage() {
 
             <div>
               <div className="flex justify-between text-gray-400 font-semibold mb-1">
-                <span>Simulation Duration (Days)</span>
-                <span className="text-emerald-400 font-bold">{days} Days</span>
+                <span>Simulation Duration (Days / Years)</span>
+                <span className="text-emerald-400 font-bold">
+                  {days} Days (~{(days / 365.0).toFixed(1)} Years)
+                </span>
               </div>
               <input
                 type="range"
-                min="5" // Start duration level from 5 days
-                max="365"
+                min="5" 
+                max="3650" // Slide up to 10 years (3650 days) to see long term timber output!
                 value={days}
                 onChange={(e) => setDays(parseInt(e.target.value))}
                 className="eco-slider"
@@ -114,9 +131,9 @@ export default function TreePage() {
                 onChange={(e) => setTreeType(e.target.value)}
                 className="w-full p-2.5 bg-black/40 border border-emerald-500/10 rounded-xl text-white focus:outline-none focus:border-emerald-500 text-xs"
               >
+                <option value="Teak" className="bg-[#091612] text-white">Teak Wood (High Timber Value - Rs.10,000/log)</option>
                 <option value="Mangrove" className="bg-[#091612] text-white">Mangrove (High Carbon Capture - 25kg/yr)</option>
                 <option value="Oak" className="bg-[#091612] text-white">Oak (Moderate Absorption - 22kg/yr)</option>
-                <option value="Pine" className="bg-[#091612] text-white">Pine (Low Absorption - 18kg/yr)</option>
               </select>
             </div>
 
@@ -174,6 +191,21 @@ export default function TreePage() {
               </div>
             </div>
           </div>
+
+          {/* Timber Commercial Output Box */}
+          {treeType === 'Teak' && (
+            <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl space-y-2">
+              <h4 className="font-bold text-amber-400 flex items-center gap-1.5">
+                💼 Teak Wood Plantation Timber Yield Output
+              </h4>
+              <p className="text-gray-300 leading-normal">
+                Based on current market valuations, 1 mature Teak tree yields logs worth approx <strong>₹10,000 per log after 6 to 7 years</strong>, rising to <strong>₹18,000 per log after 10 years</strong>.
+              </p>
+              <div className="text-sm font-black text-white mt-1">
+                Estimated Commercial Value for {treeCount} Trees: <span className="text-amber-400">₹{getTeakWoodYield().toLocaleString()}</span>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             {/* SVG Tree Animation Card */}
