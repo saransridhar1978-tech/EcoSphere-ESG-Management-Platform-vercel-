@@ -14,7 +14,7 @@ import {
   MapPin,
   Sparkles
 } from 'lucide-react';
-import { Line, Bar } from 'react-chartjs-2';
+import { Line, Bar, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,7 +26,8 @@ import {
   Tooltip,
   Legend,
   Filler,
-  RadialLinearScale
+  RadialLinearScale,
+  ArcElement
 } from 'chart.js';
 
 ChartJS.register(
@@ -39,7 +40,8 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler,
-  RadialLinearScale
+  RadialLinearScale,
+  ArcElement
 );
 
 export default function Dashboard() {
@@ -150,6 +152,27 @@ export default function Dashboard() {
     ]
   };
 
+  // New Pie Chart Data for ESG Contributions
+  const esgPieData = {
+    labels: ['Environmental (E)', 'Social (S)', 'Governance (G)'],
+    datasets: [
+      {
+        data: [esgData.environmental_score, esgData.social_score, esgData.governance_score],
+        backgroundColor: [
+          'rgba(16, 185, 129, 0.7)',
+          'rgba(6, 182, 212, 0.7)',
+          'rgba(244, 63, 94, 0.7)'
+        ],
+        borderColor: [
+          '#10b981',
+          '#06b6d4',
+          '#f43f5e'
+        ],
+        borderWidth: 1.5
+      }
+    ]
+  };
+
   const handleExport = () => {
     if (user?.id) {
       window.open(`http://localhost:8000/report/download?user_id=${user.id}`, '_blank');
@@ -241,48 +264,67 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Row 1: ESG breakdown & Carbon trends */}
+      {/* Row 1: ESG breakdown (with Pie Chart) & Carbon trends */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs">
-        <div className="glass-card flex flex-col justify-between">
+        
+        {/* ESG Breakdown + Pie Chart Card */}
+        <div className="glass-card flex flex-col justify-between space-y-4">
           <div>
             <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-1.5">
-              <Sparkles className="h-4.5 w-4.5 text-emerald-400 animate-pulse" /> ESG Score Breakdown
+              <Sparkles className="h-4.5 w-4.5 text-emerald-400" /> ESG Breakdown & Contributions
             </h3>
             
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between mb-1.5">
-                  <span className="text-gray-400">Environmental (E) Rating</span>
-                  <span className="text-emerald-400 font-bold">{esgData.environmental_score}%</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+              {/* Progress Bars */}
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <span className="text-gray-400">Environmental (E)</span>
+                    <span className="text-emerald-400 font-bold">{esgData.environmental_score}%</span>
+                  </div>
+                  <div className="w-full bg-emerald-950 h-1.5 rounded-full">
+                    <div className="bg-emerald-400 h-1.5 rounded-full" style={{ width: `${esgData.environmental_score}%` }}></div>
+                  </div>
                 </div>
-                <div className="w-full bg-emerald-950 h-1.5 rounded-full">
-                  <div className="bg-emerald-400 h-1.5 rounded-full" style={{ width: `${esgData.environmental_score}%` }}></div>
+
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <span className="text-gray-400">Social (S)</span>
+                    <span className="text-cyan-400 font-bold">{esgData.social_score}%</span>
+                  </div>
+                  <div className="w-full bg-cyan-950 h-1.5 rounded-full">
+                    <div className="bg-cyan-400 h-1.5 rounded-full" style={{ width: `${esgData.social_score}%` }}></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <span className="text-gray-400">Governance (G)</span>
+                    <span className="text-rose-400 font-bold">{esgData.governance_score}%</span>
+                  </div>
+                  <div className="w-full bg-rose-950 h-1.5 rounded-full">
+                    <div className="bg-rose-400 h-1.5 rounded-full" style={{ width: `${esgData.governance_score}%` }}></div>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <div className="flex justify-between mb-1.5">
-                  <span className="text-gray-400">Social (S) Rating</span>
-                  <span className="text-emerald-400 font-bold">{esgData.social_score}%</span>
-                </div>
-                <div className="w-full bg-emerald-950 h-1.5 rounded-full">
-                  <div className="bg-emerald-400 h-1.5 rounded-full" style={{ width: `${esgData.social_score}%` }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between mb-1.5">
-                  <span className="text-gray-400">Governance (G) Rating</span>
-                  <span className="text-cyan-400 font-bold">{esgData.governance_score}%</span>
-                </div>
-                <div className="w-full bg-cyan-950 h-1.5 rounded-full">
-                  <div className="bg-cyan-400 h-1.5 rounded-full" style={{ width: `${esgData.governance_score}%` }}></div>
-                </div>
+              {/* Pie Chart display */}
+              <div className="h-32 flex justify-center items-center">
+                <Pie 
+                  data={esgPieData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: { display: false }
+                    }
+                  }}
+                />
               </div>
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-emerald-500/10">
+          <div className="mt-4 pt-4 border-t border-emerald-500/10">
             <span className="text-emerald-400 font-bold flex items-center gap-1.5 mb-1">
               <Cpu className="h-4 w-4" /> AI Diagnostics Core
             </span>
