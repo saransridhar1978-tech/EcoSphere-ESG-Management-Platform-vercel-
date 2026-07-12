@@ -99,3 +99,42 @@ body {
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
+
+/* Light mode text contrast overrides */
+html:not([data-theme="dark"]) .text-gray-400,
+html:not([data-theme="dark"]) .text-slate-400 {
+  color: #334155 !important;
+}
+
+html:not([data-theme="dark"]) .text-gray-300,
+html:not([data-theme="dark"]) .text-slate-300 {
+  color: #1e293b !important;
+}
+
+html:not([data-theme="dark"]) .text-gray-200,
+html:not([data-theme="dark"]) .text-slate-200 {
+  color: #0f172a !important;
+}
+
+html:not([data-theme="dark"]) .text-gray-100,
+html:not([data-theme="dark"]) .text-slate-100 {
+  color: #020617 !important;
+}
+
+html:not([data-theme="dark"]) .text-white {
+  color: #091a14 !important;
+}
+
+html:not([data-theme="dark"]) .glass-card {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+html:not([data-theme="dark"]) select,
+html:not([data-theme="dark"]) input,
+html:not([data-theme="dark"]) textarea {
+  color: #091a14 !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
