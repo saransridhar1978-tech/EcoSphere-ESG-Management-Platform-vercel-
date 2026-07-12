@@ -275,16 +275,53 @@ def renewable_predict(data: RenewableInput, db: Session = Depends(get_db)):
 def green_coach(data: CoachInput):
     msg_lower = data.message.lower()
     
-    if "carbon" in msg_lower or "reduce emissions" in msg_lower:
-        reply = "Reducing carbon emissions requires a multi-pronged approach:\n1. Transition to 100% renewable electricity contracts.\n2. Optimize cargo shipment and transit paths.\n3. Implement energy-efficiency retrofits (like LED lighting & IoT sensors).\n4. Institute composting to divert landfills."
-    elif "greenwash" in msg_lower:
-        reply = "Greenwashing happens when companies mislead consumers about their environmental friendliness. To avoid this, back all claims with audited certifications (such as ISO 14064 or SCS global), publish transparent raw data, and specify concrete goals instead of vague buzzwords like 'eco-friendly'."
-    elif "tree" in msg_lower or "plant" in msg_lower:
-        reply = "Trees play a vital role. For instance, a single mature Oak or Mangrove can absorb between 20kg to 25kg of CO2 per year. Choosing native varieties is crucial for maintaining biodiversity."
-    elif "renewable" in msg_lower or "solar" in msg_lower:
-        reply = "Solar energy generation depends on Panel Capacity (kW) and Peak Sun Hours. Typically, a standard 10kW commercial setup with 4.5 sun hours produces around 35kWh daily. Adding battery storage helps smooth output during off-peak windows."
+    if "hello" in msg_lower or "hi" in msg_lower or "hey" in msg_lower:
+        reply = "Hello! I am your EcoSphere AI Assistant. How can I help you optimize your carbon footprint, audit renewable energy, calculate timber yields, or allocate daily work tasks today?"
+    elif "carbon" in msg_lower or "reduce emissions" in msg_lower:
+        reply = ("To reduce carbon emissions at your corporate campus:\n"
+                 "1. Transition to local clean grids (Solar/Wind specs side-by-side).\n"
+                 "2. Enable smart daily work routines (like turning off motors and appliances at time).\n"
+                 "3. Introduce organic biogas digesters for food waste.\n"
+                 "4. Plant high-yield carbon-sink trees like Mangroves to offset direct smoke.")
+    elif "greenwash" in msg_lower or "detector" in msg_lower:
+        reply = ("Our Greenwashing AI Detector helps you verify sustainability statements against industry standards (ISO 14001, GRI).\n"
+                 "Simply input your claims and budget in INR (₹) to get concrete, audited roadmap changes and cost-effective plan modifications automatically.")
+    elif "tree" in msg_lower or "plant" in msg_lower or "teak" in msg_lower or "sandalwood" in msg_lower:
+        reply = ("Our Tree Plantation Impact Simulator models growth and returns up to 15 years:\n"
+                 "- Timber category: Teak wood logs (₹10,000 to ₹18,000 per tree log) & Rosewood (₹18,000 to ₹35,000).\n"
+                 "- Agriculture: Mango & Coconut (yielding ₹2,500 to ₹3,500 annual crop profits).\n"
+                 "- Carbon capture: Mangroves absorb up to 25kg CO2 annually. Planting trees awards Eco Coins!")
+    elif "renewable" in msg_lower or "solar" in msg_lower or "wind" in msg_lower or "hydro" in msg_lower or "water" in msg_lower or "biogas" in msg_lower:
+        reply = ("EcoSphere supports four major renewable energy sources:\n"
+                 "- Solar: Capacity (kW) multiplied by peak sun hours with duration time bars.\n"
+                 "- Wind: Turbine output modeled on localized wind speed cubic factors.\n"
+                 "- Hydroelectric (Water): Modeled on water flow rates (m³/s) and head height.\n"
+                 "- Biogas: Continuous anaerobic digestion of organic waste feedstock.\n"
+                 "Combine them to see your total annual CO2 offset in tonnes.")
+    elif "tamil nadu" in msg_lower or "india" in msg_lower or "google maps" in msg_lower or "location" in msg_lower:
+        reply = ("EcoSphere is customized for Tamil Nadu, India. The Eco-Gini Score page displays an active Google Maps iframe centering on your audited facility location.\n"
+                 "This allows site verification and geo-coordinates matching for regulatory ESG compliance.")
+    elif "worker" in msg_lower or "work allocation" in msg_lower or "task" in msg_lower or "motor" in msg_lower:
+        reply = ("Our Daily Work Allocation system assigns eco-duties to campus workers, such as:\n"
+                 "- Switching off the water motor on time to save electricity.\n"
+                 "- Maintaining the grassland lawn to sustain local biodiversity.\n"
+                 "- Turning off unused electronic products to prevent phantom power load.\n"
+                 "Workers earn Eco Coins upon completion, promoting active green gamification.")
+    elif "photo" in msg_lower or "review" in msg_lower or "upload" in msg_lower:
+        reply = ("You can upload photos of campus assets in the Dashboard Review system or submit photos with geotags in the Gamification Weekly Challenges.\n"
+                 "This verification process ensures tasks are completed transparent and certified by GPS coordinates.")
+    elif "coin" in msg_lower or "reward" in msg_lower or "leaderboard" in msg_lower:
+        reply = ("Eco Coins are earned by completing weekly challenges (e.g. Clean the Lake, Biogas digester usage) and plantation targets.\n"
+                 "You can redeem these coins at our integrated Social Marketing platforms. Track your global standings on the Gamification Leaderboard!")
+    elif "report" in msg_lower or "download" in msg_lower or "pdf" in msg_lower:
+        reply = "You can download a comprehensive, dynamically generated PDF ESG Audit Report directly by clicking the 'Export ESG Report' button on the main dashboard."
     else:
-        reply = "EcoSphere Copilot recommendation: Audit scope 1 & 2 carbon profiles first. Our ESG simulator or Carbon Analyzer can assist in identifying high-impact areas."
+        reply = ("I am your EcoSphere AI copilot. I can answer questions about:\n"
+                 "• Daily Work Allocation for campus workers.\n"
+                 "• Solar, Wind, Hydro, and Biogas specs side-by-side.\n"
+                 "• Teak wood timber and Agri product price projections.\n"
+                 "• Greenwashing claims verification in INR (₹).\n"
+                 "• Tamil Nadu Google Maps location-based Eco-Gini score calculation.")
         
     return {"reply": reply}
 
